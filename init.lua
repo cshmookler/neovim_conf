@@ -1,0 +1,145 @@
+-- List languages that require language-specific highlighting.
+-- Highlighting for these languages are installed by default, but others are
+-- installed automatically.
+local languages = {
+    "c",
+    "cpp",
+    "lua",
+    "python",
+    "java",
+    "javascript",
+    "typescript",
+    "vimdoc",
+    "vim",
+    "bash",
+}
+
+-- List lsp servers to install.
+local lsp_servers = {
+    ["lua_ls"] = {
+        Lua = {
+            workspace = {
+                checkThirdParty = false,
+            },
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
+    ["clangd"] = {},
+    ["pyright"] = {},
+    ["jdtls"] = {
+        cmd = {
+            "jdtls",
+            "-configuration",
+            vim.fn.resolve(vim.fn.getcwd() .. "/config/"),
+            "-data",
+            vim.fn.getcwd(),
+        },
+        init_options = {
+            jvm_args = {},
+            workspace = vim.fn.getcwd(),
+        },
+    },
+}
+
+-- Install lazy.nvim if it isn't already installed.
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
+
+vim.opt.termguicolors = true -- Enable 24-bit RGB color.
+vim.opt.background = "dark"  -- Set the defualt background.
+vim.g.mapleader = " "        -- Set global mapping for <Leader>.
+vim.g.maplocalleader = " "   -- Set local mapping for <Leader>.
+
+local icons_enabled = false  -- Whether to enable icons.
+
+-- Install plugins with lazy.nvim.
+local lazy = require("lazy")
+lazy.setup(
+    require("lazy_plugins")(languages, lsp_servers, icons_enabled),
+    require("opt.lazy")
+)
+
+-- Indentation
+vim.opt.shiftwidth = 4    -- Indentation width.
+vim.opt.smarttab = true   -- Insert spaces instead of tabs.
+vim.opt.expandtab = true  -- Convert existing tabs to spaces.
+vim.opt.tabstop = 8       -- Tab character width.
+vim.opt.softtabstop = 4   -- Tab character width (editing operations).
+vim.opt.autoindent = true -- Keep indentation level for new lines.
+
+-- Line wrapping
+vim.opt.wrap = true        -- Enable line wrapping.
+vim.opt.linebreak = true   -- Wrap lines by words.
+vim.opt.breakindent = true -- Wrap lines at the same indentation level.
+vim.opt.breakindentopt = {
+    "min:20",
+    -- "shift:" .. vim.o.shiftwidth,  -- Hanging indent for wrapped lines.
+}
+-- vim.opt.showbreak = "+++ "  -- Displayed before wrapped lines.
+vim.opt.textwidth = 80 -- Wrap words past a certain column.
+
+-- UI
+vim.opt.cmdheight = 1         -- Hide the command line unless it is used.
+vim.opt.number = true         -- Show line numbers.
+vim.opt.relativenumber = true -- Show relative line numbers.
+vim.opt.cursorline = true     -- Highlight the line with the cursor.
+vim.opt.cursorlineopt = "number,line"
+-- vim.opt.laststatus = 0  -- When to display the status line.
+vim.opt.splitbelow = true                                  -- Create a new window below the existing one.
+vim.opt.splitright = true                                  -- Create a new window right of the existing one.
+vim.opt.showtabline = 1                                    -- When to show tha tab line.
+vim.opt.signcolumn = "yes"                                 -- When to show the sign column.
+vim.opt.colorcolumn = string.format("%i", vim.o.textwidth) -- Color a specific column.
+vim.opt.completeopt = "menuone,noselect"                   -- How to display completion options.
+vim.opt.hlsearch = false
+
+-- Completion
+vim.opt.wildchar = 14   -- Key for triggering command-line completion.
+vim.opt.wildmenu = true -- Enhance command-line completion.
+
+-- Miscellaneous
+vim.opt.scrolloff = 8             -- Minimum number of lines to keep above and below the cursor.
+vim.opt.clipboard = "unnamedplus" -- Use the system clipboard.
+vim.opt.undofile = true           -- Persistent undo history.
+vim.opt.undolevels = 1000         -- Saved undo levels.
+vim.opt.updatetime = 250          -- Milliseconds between swap file writes when nothing is typed.
+vim.opt.timeoutlen = 1000         -- Milliseconds to wait for a mapped sequence to complete.
+vim.opt.mouse = ""                -- Mouse support.
+
+local noremap = function(mode, lhs, rhs)
+    vim.keymap.set(mode, lhs, rhs, { noremap = true })
+end
+
+local nnoremap = function(lhs, rhs)
+    noremap("n", lhs, rhs)
+end
+
+-- local vnoremap = function(lhs, rhs)
+--     noremap("v", lhs, rhs)
+-- end
+
+-- Switch between windows.
+nnoremap("<C-h>", "<C-w>h")
+nnoremap("<C-j>", "<C-w>j")
+nnoremap("<C-k>", "<C-w>k")
+nnoremap("<C-l>", "<C-w>l")
+
+-- File modification.
+nnoremap("<C-s>", ":w<CR>")
+
+-- Tab navigation.
+nnoremap("<C-n>", ":tabprevious<CR>")
+nnoremap("<C-m>", ":tabnext<CR>")
+
