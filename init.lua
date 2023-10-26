@@ -17,28 +17,37 @@ local languages = {
 -- List lsp servers to install.
 local lsp_servers = {
     ["lua_ls"] = {
-        Lua = {
-            workspace = {
-                checkThirdParty = false,
-            },
-            telemetry = {
-                enable = false,
+        lsp_settings = {
+            Lua = {
+                workspace = {
+                    checkThirdParty = false,
+                },
+                telemetry = {
+                    enable = false,
+                },
             },
         },
     },
     ["clangd"] = {},
     ["pyright"] = {},
+    -- ["swift-mesonlsp"] = { lsp_settings = {}, lspconfig_settings = {}, },
     ["jdtls"] = {
-        cmd = {
-            "jdtls",
-            "-configuration",
-            vim.fn.resolve(vim.fn.getcwd() .. "/config/"),
-            "-data",
-            vim.fn.getcwd(),
-        },
-        init_options = {
-            jvm_args = {},
-            workspace = vim.fn.getcwd(),
+        autosetup = false,
+        lspconfig_settings = {
+            cmd = {
+                "jdtls",
+                "-configuration",
+                vim.fn.expand("$HOME/.cache/jdtls/config"),
+                "-data",
+                vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+            },
+            init_options = {
+                jvm_args = {},
+                workspace = vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+            },
+            root_dir = function(_)
+                return vim.fn.getcwd()
+            end,
         },
     },
 }
@@ -85,22 +94,23 @@ vim.opt.linebreak = true   -- Wrap lines by words.
 vim.opt.breakindent = true -- Wrap lines at the same indentation level.
 vim.opt.breakindentopt = {
     "min:20",
-    -- "shift:" .. vim.o.shiftwidth,  -- Hanging indent for wrapped lines.
+    "shift:2",  -- Hanging indent for wrapped lines.
 }
 -- vim.opt.showbreak = "+++ "  -- Displayed before wrapped lines.
-vim.opt.textwidth = 80 -- Wrap words past a certain column.
+-- vim.opt.textwidth = 80 -- Wrap words past a certain column.
 
 -- UI
 vim.opt.cmdheight = 1         -- Hide the command line unless it is used.
 vim.opt.number = true         -- Show line numbers.
 vim.opt.relativenumber = true -- Show relative line numbers.
 vim.opt.cursorline = true     -- Highlight the line with the cursor.
+vim.opt.cursorcolumn = true   -- Highlight the column with the cursor.
 vim.opt.cursorlineopt = "number,line"
 -- vim.opt.laststatus = 0  -- When to display the status line.
 vim.opt.splitbelow = true                                  -- Create a new window below the existing one.
 vim.opt.splitright = true                                  -- Create a new window right of the existing one.
 vim.opt.showtabline = 1                                    -- When to show tha tab line.
-vim.opt.signcolumn = "yes"                                 -- When to show the sign column.
+vim.opt.signcolumn = "yes:2"                               -- When to show the sign column.
 vim.opt.colorcolumn = string.format("%i", vim.o.textwidth) -- Color a specific column.
 vim.opt.completeopt = "menuone,noselect"                   -- How to display completion options.
 vim.opt.hlsearch = false
@@ -118,28 +128,32 @@ vim.opt.updatetime = 250          -- Milliseconds between swap file writes when 
 vim.opt.timeoutlen = 1000         -- Milliseconds to wait for a mapped sequence to complete.
 vim.opt.mouse = ""                -- Mouse support.
 
-local noremap = function(mode, lhs, rhs)
-    vim.keymap.set(mode, lhs, rhs, { noremap = true })
-end
-
-local nnoremap = function(lhs, rhs)
-    noremap("n", lhs, rhs)
-end
-
--- local vnoremap = function(lhs, rhs)
---     noremap("v", lhs, rhs)
--- end
-
 -- Switch between windows.
-nnoremap("<C-h>", "<C-w>h")
-nnoremap("<C-j>", "<C-w>j")
-nnoremap("<C-k>", "<C-w>k")
-nnoremap("<C-l>", "<C-w>l")
-
--- File modification.
-nnoremap("<C-s>", ":w<CR>")
+vim.cmd.nnoremap("<C-h>", "<C-w>h")
+vim.cmd.nnoremap("<C-j>", "<C-w>j")
+vim.cmd.nnoremap("<C-k>", "<C-w>k")
+vim.cmd.nnoremap("<C-l>", "<C-w>l")
 
 -- Tab navigation.
-nnoremap("<C-n>", ":tabprevious<CR>")
-nnoremap("<C-m>", ":tabnext<CR>")
+vim.cmd.nnoremap("<C-n>", ":tabprevious<CR>")
+vim.cmd.nnoremap("<C-m>", ":tabnext<CR>")
 
+-- Integrated terminal.
+vim.cmd.nnoremap("<Leader>t", ":split<CR>:terminal<CR>A")
+vim.cmd.tnoremap("<C-e>", "<C-\\><C-n>")
+vim.cmd.tnoremap("<C-h>", "<C-\\><C-n><C-w>h")
+vim.cmd.tnoremap("<C-j>", "<C-\\><C-n><C-w>j")
+vim.cmd.tnoremap("<C-k>", "<C-\\><C-n><C-w>k")
+vim.cmd.tnoremap("<C-l>", "<C-\\><C-n><C-w>l")
+
+-- Automatically close the integrated terminal when the process terminates.
+vim.api.nvim_create_autocmd("TermClose", {
+    callback = function()
+       vim.cmd("close")
+    end
+})
+
+vim.cmd.au("BufNewFile,BufRead", "*.py.tmpl", ":set filetype=python")
+vim.cmd.au("BufNewFile,BufRead", "meson.build.tmpl", ":set filetype=meson")
+vim.cmd.au("BufNewFile,BufRead", "*.hpp.in.tmpl", ":set filetype=cpp")
+vim.cmd.au("BufNewFile,BufRead", "*.cpp.tmpl", ":set filetype=cpp")

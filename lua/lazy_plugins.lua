@@ -56,6 +56,8 @@ return function(languages, lsp_servers, icons_enabled)
                 "hrsh7th/cmp-cmdline",
                 "L3MON4D3/LuaSnip",
                 "saadparwaiz1/cmp_luasnip",
+
+                "mfussenegger/nvim-jdtls",
             },
             config = function()
                 require("cfg.lsp")(lsp_servers)
@@ -125,6 +127,8 @@ return function(languages, lsp_servers, icons_enabled)
         },
 
         { "tpope/vim-fugitive" },
+
+        { "airblade/vim-gitgutter" },
 
     }
 end

@@ -22,7 +22,7 @@ return function(lsp_servers)
 
         -- See `:help K` for why this keymap
         nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-        nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+        nmap('<C-y>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
         -- Lesser used LSP functionality
         nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -53,16 +53,45 @@ return function(lsp_servers)
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
     capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
+    local lspconfig = require("lspconfig")
+
     mason_lspconfig.setup_handlers({
         function(server_name)
-            require("lspconfig")[server_name].setup({
+            if lsp_servers[server_name]["autosetup"] == false then
+                return
+            end
+            -- print("loading server: " .. server_name)
+            lspconfig[server_name].setup(vim.tbl_extend("force", {
                 capabilities = capabilities,
                 on_attach = on_attach,
-                settings = lsp_servers[server_name],
-                filetypes = (lsp_servers[server_name] or {}).filetypes,
-            })
+                settings = lsp_servers[server_name]["lsp_settings"] or {},
+                filetypes = (lsp_servers[server_name]["lsp_settings"] or {}).filetypes,
+            }, lsp_servers[server_name]["lspconfig_settings"] or {}))
         end,
     })
+
+    -- print("loading server: " .. "swift_mesonls")
+    lspconfig["swift_mesonls"].setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = lsp_servers["swift_mesonls"],
+        filetypes = (lsp_servers["swift_mesonls"] or {}).filetypes,
+    })
+
+    -- local jdtls_project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+    local jdtls_config = {
+        cmd = {
+            "jdtls",
+            "-configuration",
+            vim.fn.expand("$HOME/.cache/jdtls/config"),
+            "-data",
+            -- vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+            vim.fn.getcwd(),
+        },
+        -- cmd = { "jdtls" },
+        root_dir = vim.fn.getcwd(),
+    }
+    require("jdtls").start_or_attach(jdtls_config)
 
     local cmp = require("cmp")
     local luasnip = require("luasnip")

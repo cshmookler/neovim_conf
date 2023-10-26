@@ -80,7 +80,7 @@ return function()
                         color = true,
                     },
                 },
-                git_placement = "before",
+                git_placement = "after",
                 modified_placement = "after",
                 diagnostics_placement = "signcolumn",
                 bookmarks_placement = "signcolumn",
