@@ -32,7 +32,7 @@ local lsp_servers = {
     ["pyright"] = {},
     -- ["swift-mesonlsp"] = { lsp_settings = {}, lspconfig_settings = {}, },
     ["jdtls"] = {
-        autosetup = false,
+        autosetup = true,
         lspconfig_settings = {
             cmd = {
                 "jdtls",

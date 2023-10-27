@@ -126,8 +126,6 @@ return function(languages, lsp_servers, icons_enabled)
             config = require("cfg.tree")
         },
 
-        { "tpope/vim-fugitive" },
-
         { "airblade/vim-gitgutter" },
 
     }

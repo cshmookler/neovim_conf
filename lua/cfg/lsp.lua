@@ -79,19 +79,19 @@ return function(lsp_servers)
     })
 
     -- local jdtls_project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-    local jdtls_config = {
-        cmd = {
-            "jdtls",
-            "-configuration",
-            vim.fn.expand("$HOME/.cache/jdtls/config"),
-            "-data",
-            -- vim.fn.expand("$HOME/.cache/jdtls/workspace"),
-            vim.fn.getcwd(),
-        },
-        -- cmd = { "jdtls" },
-        root_dir = vim.fn.getcwd(),
-    }
-    require("jdtls").start_or_attach(jdtls_config)
+    -- local jdtls_config = {
+    --     cmd = {
+    --         "jdtls",
+    --         "-configuration",
+    --         vim.fn.expand("$HOME/.cache/jdtls/config"),
+    --         "-data",
+    --         -- vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+    --         vim.fn.getcwd(),
+    --     },
+    --     -- cmd = { "jdtls" },
+    --     root_dir = vim.fn.getcwd(),
+    -- }
+    -- require("jdtls").start_or_attach(jdtls_config)
 
     local cmp = require("cmp")
     local luasnip = require("luasnip")
