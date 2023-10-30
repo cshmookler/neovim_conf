@@ -69,6 +69,7 @@ return function(languages, lsp_servers, icons_enabled)
 
         {
             "numToStr/Comment.nvim",
+            priority = 98,
             config = function()
                 local comment = require("Comment")
                 comment.setup(require("opt.Comment"))
@@ -77,6 +78,7 @@ return function(languages, lsp_servers, icons_enabled)
 
         {
             "nvim-lualine/lualine.nvim",
+            priority = 97,
             config = function()
                 local lualine = require("lualine")
                 lualine.setup(require("opt.lualine")(icons_enabled))
@@ -86,6 +88,7 @@ return function(languages, lsp_servers, icons_enabled)
         {
             "windwp/nvim-autopairs",
             -- event = "InsertEnter",
+            priority = 96,
             config = function()
                 local autopairs = require("nvim-autopairs")
                 autopairs.setup(require("opt.autopairs"))
@@ -94,6 +97,7 @@ return function(languages, lsp_servers, icons_enabled)
 
         {
             "lukas-reineke/indent-blankline.nvim",
+            priority = 95,
             config = function()
                 local ibl = require("ibl")
                 ibl.setup(require("opt.indent-blankline"))
@@ -101,8 +105,15 @@ return function(languages, lsp_servers, icons_enabled)
         },
 
         {
+            "ThePrimeagen/refactoring.nvim",
+            priority = 94,
+            config = require("cfg.refactoring"),
+        },
+
+        {
             "nvim-telescope/telescope.nvim",
             tag = "0.1.4",
+            priority = 93,
             dependencies = {
 
                 { "nvim-lua/plenary.nvim", },

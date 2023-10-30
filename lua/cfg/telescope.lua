@@ -46,4 +46,3 @@ return function()
     vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = "[F]ind [D]iagnostics" })
     vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = "[F]ind [R]esume" })
 end
-
