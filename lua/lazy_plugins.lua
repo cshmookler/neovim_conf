@@ -56,8 +56,11 @@ return function(languages, lsp_servers, icons_enabled)
                 "hrsh7th/cmp-cmdline",
                 "L3MON4D3/LuaSnip",
                 "saadparwaiz1/cmp_luasnip",
+                "hrsh7th/cmp-nvim-lsp-signature-help",
 
                 "mfussenegger/nvim-jdtls",
+
+                "https://git.sr.ht/%7Ewhynothugo/lsp_lines.nvim",
             },
             config = function()
                 require("cfg.lsp")(lsp_servers)

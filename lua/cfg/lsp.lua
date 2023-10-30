@@ -36,7 +36,24 @@ return function(lsp_servers)
         vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
             vim.lsp.buf.format()
         end, { desc = 'Format current buffer with LSP' })
+
+        nmap('<leader>F', ':Format<CR>', '[F]ormat')
+        vim.cmd([[ autocmd BufWritePre * lua vim.lsp.buf.format() ]])
+
+        -- lsp lines
+        -- nmap('<leader>l', require("lsp_lines").toggle, { desc = "Toggle lsp_[l]ines" })
     end
+
+    vim.api.nvim_create_autocmd("LspAttach", {
+        -- Inlay hints
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if client.server_capabilities.inlayHintProvider then
+                vim.lsp.inlay_hint(args.buf, true)
+            end
+        end,
+    })
 
     local mason = require("mason")
     mason.setup(require("opt.mason"))
@@ -92,6 +109,19 @@ return function(lsp_servers)
     --     root_dir = vim.fn.getcwd(),
     -- }
     -- require("jdtls").start_or_attach(jdtls_config)
+    -- Set some keybinds conditional on server capabilities
+
+    -- Better diagnostics.
+    -- local lsp_lines = require("lsp_lines")
+    -- lsp_lines.setup()
+
+    vim.diagnostic.config({
+        virtual_text = false,
+        virtual_lines = {
+            highligh_while_line = false,
+            only_current_line = true,
+        },
+    })
 
     local cmp = require("cmp")
     local luasnip = require("luasnip")
@@ -148,6 +178,7 @@ return function(lsp_servers)
             ['<C-Space>'] = cmp.mapping.complete(),
             ['<C-e>'] = cmp.mapping.abort(),
             ['<CR>'] = cmp.mapping.confirm({ cmp.ConfirmBehavior.Replace, select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+            -- ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
             ["<Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
@@ -188,18 +219,27 @@ return function(lsp_servers)
         sources = cmp.config.sources({
             {
                 name = 'nvim_lsp',
-                entry_filter = function(entry, _)
-                    return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
-                end,
+                -- entry_filter = function(entry, _)
+                --     return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
+                -- end,
             },
             {
-                name = 'luasnip'
+                name = 'luasnip',
+                -- entry_filter = function(entry, _)
+                --     return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
+                -- end,
             },
             {
                 name = 'buffer',
                 entry_filter = function(entry, _)
                     return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
                 end,
+            },
+            {
+                name = 'nvim_lsp_signature_help',
+                -- entry_filter = function(entry, _)
+                --     return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
+                -- end,
             },
         }),
 
