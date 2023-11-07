@@ -1,8 +1,6 @@
 # **My Neovim Configuration**
 
-~~This is my personal Neovim configuration. It includes syntax highlighting, autocompletion, code linting, git integration, filesystem integration, fuzzy finding, and other useful plugins.~~
-
-I am refactoring my personal Neovim configuration. What is shown here is imcomplete and missing key features.
+This is my personal Neovim configuration. It includes syntax highlighting, autocompletion, code linting, git integration, filesystem integration, and other useful plugins.
 
 ## **Installation**
 

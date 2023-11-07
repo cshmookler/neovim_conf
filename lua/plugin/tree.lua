@@ -51,7 +51,7 @@ return function()
             width = 40,
             height = 30,
             row = 1,
-            col = 1,
+            col = 0,
           },
         },
       },

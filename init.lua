@@ -7,5 +7,5 @@ require("bootstrap")()
 -- Install plugins (if not already installed).
 require("plugin_list")()
 
--- Key mappings
+-- Key mappings.
 require("key_mappings")()

@@ -1,27 +1,80 @@
 return function()
+    vim.diagnostic.config({
+        virtual_text = false,
+        virtual_lines = {
+            highlight_while_line = false,
+            only_current_line = true,
+        },
+    })
+
     local cmp = require("cmp")
+    local luasnip = require("luasnip")
+    luasnip.config.setup()
+
     cmp.setup({
 
         snippet = {
             expand = function(args)
-                vim.fn["UltiSnips#Anon"](args.body)
+                luasnip.lsp_expand(args.body)
             end
         },
 
+        view = {
+            entries = {
+                name = "custom",
+                selection_order = "top_down",
+            },
+            docs = {
+                auto_open = true,
+            },
+        },
+
         window = {
-            completion = {},
+            completion = {
+                scrolloff = 5,
+                col_offset = 0,
+                side_padding = 1,
+                scrollbar = true,
+            },
             documentation = {},
         },
 
-        mappings = cmp.mapping.preset.insert({
-            ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-            ["<C-f>"] = cmp.mapping.scroll_docs(4),
-            ["<C-Space>"] = cmp.mapping.complete(),
-            ["<C-e>"] = cmp.mapping.confirm({ cmp.ConfirmBehavior.Replace, select = true }),
-            -- ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        formatting = {
+            -- fields = { "menu", "abbr", "kind" },
+            fields = { "abbr", "kind", "menu" },
+            expandable_indicator = true,
+        },
+
+        sources = {
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+            { name = "nvim_lsp_signature_help" },
+            { name = "calc" },
+            { name = "emoji" },
+            {
+                name = "buffer",
+                entry_filter = function(entry, _)
+                    return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
+                end,
+            },
+        },
+
+        mapping = {
+            ["<C-p>"] = function() end,
+            ["<C-n>"] = function() end,
+            ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+            ["<C-u>"] = cmp.mapping.scroll_docs(4),
+            -- ["<C-Space>"] = cmp.mapping.complete(),
+            ["<C-e>"] = cmp.mapping.abort(),
+            ["<C-Space>"] = cmp.mapping.confirm({
+                behavior = cmp.ConfirmBehavior.Replace,
+                select = true,
+            }),
             ["<Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
+                elseif luasnip.expand_or_locally_jumpable() then
+                    luasnip.expand_or_jump()
                 else
                     fallback()
                 end
@@ -29,126 +82,19 @@ return function()
             ["<S-Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
+                elseif luasnip.locally_jumpable(-1) then
+                    luasnip.jump(-1)
                 else
                     fallback()
                 end
             end, { "i", "s" }),
-            ["<Tab>"] = cmp.mapping({
-                c = function()
-                    if cmp.visible() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                    else
-                        cmp.complete()
-                    end
-                end,
-                i = function(fallback)
-                    if cmp.visible() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                    elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
-                        vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
-                    else
-                        fallback()
-                    end
-                end,
-                s = function(fallback)
-                    if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
-                        vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), 'm', true)
-                    else
-                        fallback()
-                    end
-                end
-            }),
-            ["<S-Tab>"] = cmp.mapping({
-                c = function()
-                    if cmp.visible() then
-                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                    else
-                        cmp.complete()
-                    end
-                end,
-                i = function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                    elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                        return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
-                    else
-                        fallback()
-                    end
-                end,
-                s = function(fallback)
-                    if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                        return vim.api.nvim_feedkeys( t("<Plug>(ultisnips_jump_backward)"), 'm', true)
-                    else
-                        fallback()
-                    end
-                end
-            }),
-            ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-            ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-            ['<C-n>'] = cmp.mapping({
-                c = function()
-                    if cmp.visible() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                    else
-                        vim.api.nvim_feedkeys(t('<Down>'), 'n', true)
-                    end
-                end,
-                i = function(fallback)
-                    if cmp.visible() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                    else
-                        fallback()
-                    end
-                end
-            }),
-            ['<C-p>'] = cmp.mapping({
-                c = function()
-                    if cmp.visible() then
-                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                    else
-                        vim.api.nvim_feedkeys(t('<Up>'), 'n', true)
-                    end
-                end,
-                i = function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                    else
-                        fallback()
-                    end
-                end
-            }),
-            ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), {'i', 'c'}),
-            ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), {'i', 'c'}),
-            ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), {'i', 'c'}),
-            ['<C-e>'] = cmp.mapping({ i = cmp.mapping.close(), c = cmp.mapping.close() }),
-            ['<CR>'] = cmp.mapping({
-                i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
-                c = function(fallback)
-                    if cmp.visible() then
-                        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                    else
-                        fallback()
-                    end
-                end
-            }),
-        }),
-
-        sources = cmp.config.sources({
-            { name = "nvim_lsp" },
-            { name = "ultisnips" },
-            { name = "nvim_lua" },
-            { name = "nvim-lsp-signature-help" },
-            { name = "calc" },
-            { name = "buffer", entry_filter = function(entry, _)
-                return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
-            end },
-        }),
+        },
     })
 
     cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-            { name = "nvim_lsp_document_symbol" },
+            -- { name = "nvim_lsp_document_symbol" },
             { name = "buffer" },
         }),
     })
@@ -160,5 +106,126 @@ return function()
             { name = "cmdline" },
         })
     })
+
+    require("util.keymap")
+
+    nnoremap("gn", vim.diagnostic.goto_next, "Goto next diagnostic")
+    nnoremap("gm", vim.diagnostic.goto_prev, "Goto previous diagnostic")
+    nnoremap("gb", vim.diagnostic.setloclist, "Goto diagnostic list")
+    nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
+
+    local on_attach = function(client, bufnr)
+        nnoremap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+        nnoremap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+        nnoremap("gt", vim.lsp.buf.type_definition, "[G]oto [T]ype Defition")
+        nnoremap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+        nnoremap("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+        nnoremap("<Leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+        nnoremap("<Leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+        nnoremap("K", vim.lsp.buf.hover, "[H]over")
+
+        -- Inlay hints
+        if client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint(bufnr, true)
+        end
+    end
+
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+    local neodev = require("neodev")
+    neodev.setup({
+        lspconfig = false,
+    })
+
+    local lsp = {
+
+        {
+            name = "lua-language-server",
+            cmd = { "lua-language-server" },
+            filetypes = { "lua" },
+            before_init = require("neodev.lsp").before_init,
+            root_dir = vim.fs.dirname(vim.fs.find({
+                ".git",
+            }, { upward = true })[1] or vim.loop.cwd()),
+            settings = {
+                Lua = {
+                    completion = {
+                        callSnippet = "Replace",
+                    },
+                    workspace = {
+                        checkThirdParty = false,
+                    },
+                    telemetry = {
+                        enable = false,
+                    },
+                },
+            },
+            on_attach = on_attach,
+            capabilities = capabilities,
+        },
+
+        {
+            name = "clangd",
+            cmd = { "clangd" },
+            filetypes = { "c", "cpp", "objc", "objcpp" },
+            root_dir = vim.fs.dirname(vim.fs.find({
+                ".git",
+                ".clangd",
+                ".clang-format",
+                ".clang-tidy",
+                "compile_commands.json",
+            }, { upward = true })[1] or vim.loop.cwd()),
+            on_attach = on_attach,
+            capabilities = capabilities,
+        },
+
+        {
+            name = "Swift-MesonLSP",
+            cmd = { "Swift-MesonLSP", "--lsp" },
+            filetypes = { "meson" },
+            root_dir = vim.fs.dirname(vim.fs.find({
+                ".git",
+            }, { upward = true })[1] or vim.loop.cwd()),
+            on_attach = on_attach,
+            capabilities = capabilities,
+        },
+
+        -- {
+        --     name = "jdtls",
+        --     cmd = {
+        --         "jdtls",
+        --         "-configuration",
+        --         vim.fn.expand("$HOME/.cache/jdtls/config"),
+        --         "-data",
+        --         vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+        --     },
+        --     init_options = {
+        --         jvm_args = {},
+        --         workspace = vim.fn.expand("$HOME/.cache/jdtls/workspace")
+        --     },
+        --     root_dir = vim.fn.getcwd(),
+        -- },
+
+    }
+
+    for _, config in pairs(lsp) do
+        local client = vim.lsp.start(config)
+
+        if not client then
+            goto continue
+        end
+
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = config.filetypes,
+            callback = function()
+                vim.lsp.buf_attach_client(0, client)
+            end,
+        })
+
+        ::continue::
+    end
+
+    local fidget = require("fidget")
+    fidget.setup()
 
 end

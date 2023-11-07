@@ -1,5 +1,6 @@
 return function()
     local lazy = require("lazy")
+
     lazy.setup({
 
         {
@@ -17,11 +18,14 @@ return function()
                 "hrsh7th/cmp-path",
                 "hrsh7th/cmp-buffer",
                 "hrsh7th/cmp-cmdline",
-                "hrsh7th/cmp-nvim-lua",
                 "hrsh7th/cmp-calc",
                 "hrsh7th/cmp-nvim-lsp-document-symbol",
-                "SirVer/ultisnips",
-                "quangnguyen30192/cmp-nvim-ultisnips"
+                "L3MON4D3/LuaSnip",
+                "saadparwaiz1/cmp_luasnip",
+                "rafamadriz/friendly-snippets",
+                "hrsh7th/cmp-emoji",
+                "folke/neodev.nvim",
+                { "j-hui/fidget.nvim", tag = "legacy" },
             },
             config = require("plugin.cmp"),
         },
