@@ -4,7 +4,7 @@ This is my personal Neovim configuration. It includes syntax highlighting, autoc
 
 ## **Installation**
 
-**1.** Install Neovim 9.x.
+**1.** Install Neovim 0.10.x (nighly).
 
 **2.** Clone this repository in your Neovim configuration directory.
 ```bash
