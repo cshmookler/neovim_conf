@@ -26,6 +26,7 @@ return function()
                 "hrsh7th/cmp-emoji",
                 "folke/neodev.nvim",
                 { "j-hui/fidget.nvim", tag = "legacy" },
+                "mfussenegger/nvim-jdtls",
             },
             config = require("plugin.cmp"),
         },
@@ -61,7 +62,14 @@ return function()
         },
 
         {
-            "airblade/vim-gitgutter"
+            "airblade/vim-gitgutter",
+        },
+
+        {
+            "dstein64/vim-startuptime",
+            config = function()
+                require("startuptime")
+            end,
         },
 
     })

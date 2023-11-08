@@ -4,7 +4,7 @@ return function()
 
         padding = true, -- Add a space b/w comment and the line
 
-        sticky = true, -- Whether the cursor should stay at its position
+        sticky = true,  -- Whether the cursor should stay at its position
 
         -- Ignores empty lines
         ignore = "^$", -- Lines to be ignored while (un)comment
@@ -44,7 +44,7 @@ return function()
             extra = true,
         },
 
-        pre_hook = nil, ---Function to call before (un)comment
+        pre_hook = nil,  ---Function to call before (un)comment
 
         post_hook = nil, -- Function to call after (un)comment
 

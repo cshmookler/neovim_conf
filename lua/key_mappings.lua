@@ -1,5 +1,4 @@
 return function()
-
     require("util.keymap")
 
     -- Quick buffer management.
@@ -15,9 +14,13 @@ return function()
     nnoremap("<C-l>", "<C-w>l")
 
     -- Quick tab management.
-    nnoremap("<C-n>", vim.cmd.tabnext)
-    nnoremap("<C-m>", vim.cmd.tabprev)
-    nnoremap("<C-b>", vim.cmd.tabnew)
+    nnoremap("<C-m>", vim.cmd.tabnext)
+    nnoremap("<C-n>", vim.cmd.tabprev)
+    nnoremap("<C-b>", function()
+        vim.cmd.tabnew()
+        vim.cmd("NvimTreeOpen")
+        -- require("nvim-tree.api").tree.focus()
+    end)
 
     -- Integrated terminal.
     nnoremap("<Leader>t", ":split<CR>:terminal<CR>A")
@@ -42,5 +45,4 @@ return function()
     vim.cmd.au("BufNewFile,BufRead", "meson.build.tmpl", ":set filetype=meson")
     vim.cmd.au("BufNewFile,BufRead", "*.hpp.in.tmpl", ":set filetype=cpp")
     vim.cmd.au("BufNewFile,BufRead", "*.cpp.tmpl", ":set filetype=cpp")
-
 end

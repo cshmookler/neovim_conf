@@ -109,9 +109,9 @@ return function()
 
     require("util.keymap")
 
-    nnoremap("gn", vim.diagnostic.goto_next, "Goto next diagnostic")
-    nnoremap("gm", vim.diagnostic.goto_prev, "Goto previous diagnostic")
-    nnoremap("gb", vim.diagnostic.setloclist, "Goto diagnostic list")
+    nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
+    nnoremap("gn", vim.diagnostic.goto_prev, "Goto previous diagnostic")
+    nnoremap("gbb", vim.diagnostic.setloclist, "Goto diagnostic list")
     nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
 
     local on_attach = function(client, bufnr)
@@ -144,9 +144,11 @@ return function()
             cmd = { "lua-language-server" },
             filetypes = { "lua" },
             before_init = require("neodev.lsp").before_init,
-            root_dir = vim.fs.dirname(vim.fs.find({
-                ".git",
-            }, { upward = true })[1] or vim.loop.cwd()),
+            root_dir = vim.loop.cwd(),
+            format_on_save = true,
+            -- root_dir = vim.fs.dirname(vim.fs.find({
+            --     ".git",
+            -- }, { upward = true })[1] or vim.loop.cwd()),
             settings = {
                 Lua = {
                     completion = {
@@ -168,13 +170,15 @@ return function()
             name = "clangd",
             cmd = { "clangd" },
             filetypes = { "c", "cpp", "objc", "objcpp" },
-            root_dir = vim.fs.dirname(vim.fs.find({
-                ".git",
-                ".clangd",
-                ".clang-format",
-                ".clang-tidy",
-                "compile_commands.json",
-            }, { upward = true })[1] or vim.loop.cwd()),
+            root_dir = vim.loop.cwd(),
+            format_on_save = true,
+            -- root_dir = vim.fs.dirname(vim.fs.find({
+            --     ".git",
+            --     ".clangd",
+            --     ".clang-format",
+            --     ".clang-tidy",
+            --     "compile_commands.json",
+            -- }, { upward = true })[1] or vim.loop.cwd()),
             on_attach = on_attach,
             capabilities = capabilities,
         },
@@ -183,49 +187,70 @@ return function()
             name = "Swift-MesonLSP",
             cmd = { "Swift-MesonLSP", "--lsp" },
             filetypes = { "meson" },
-            root_dir = vim.fs.dirname(vim.fs.find({
-                ".git",
-            }, { upward = true })[1] or vim.loop.cwd()),
+            root_dir = vim.loop.cwd(),
+            -- root_dir = vim.fs.dirname(vim.fs.find({
+            --     ".git",
+            -- }, { upward = true })[1] or vim.loop.cwd()),
             on_attach = on_attach,
             capabilities = capabilities,
         },
 
-        -- {
-        --     name = "jdtls",
-        --     cmd = {
-        --         "jdtls",
-        --         "-configuration",
-        --         vim.fn.expand("$HOME/.cache/jdtls/config"),
-        --         "-data",
-        --         vim.fn.expand("$HOME/.cache/jdtls/workspace"),
-        --     },
-        --     init_options = {
-        --         jvm_args = {},
-        --         workspace = vim.fn.expand("$HOME/.cache/jdtls/workspace")
-        --     },
-        --     root_dir = vim.fn.getcwd(),
-        -- },
-
     }
 
     for _, config in pairs(lsp) do
-        local client = vim.lsp.start(config)
-
-        if not client then
-            goto continue
-        end
-
         vim.api.nvim_create_autocmd("FileType", {
             pattern = config.filetypes,
             callback = function()
+                local client = vim.lsp.start(config)
+                if not client then
+                    return
+                end
                 vim.lsp.buf_attach_client(0, client)
+
+                -- Format command and format on save.
+                vim.api.nvim_buf_create_user_command(0, "Format", function()
+                    vim.lsp.buf.format()
+                end, {})
+                if config.format_on_save then
+                    vim.api.nvim_create_autocmd("BufWritePre", {
+                        buffer = 0,
+                        callback = function()
+                            local view = vim.fn.winsaveview()
+                            vim.lsp.buf.format()
+                            vim.fn.winrestview(view)
+                        end,
+                    })
+                end
             end,
         })
-
-        ::continue::
     end
+
+    local jdtls_config = {
+        name = "jdtls",
+        cmd = {
+            "jdtls",
+            "-configuration",
+            vim.fn.expand("$HOME/.cache/jdtls/config"),
+            "-data",
+            vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+        },
+        init_options = {
+            jvm_args = {},
+            workspace = vim.fn.expand("$HOME/.cache/jdtls/workspace")
+        },
+        filetypes = { "java" },
+        root_dir = vim.fn.getcwd(),
+        on_attach = on_attach,
+        capabilities = capabilities,
+    }
+
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = jdtls_config.filetypes,
+        callback = function()
+            require("jdtls").start_or_attach(jdtls_config)
+        end,
+    })
 
     local fidget = require("fidget")
     fidget.setup()
-
 end
