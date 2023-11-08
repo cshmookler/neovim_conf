@@ -1,8 +1,46 @@
 return function()
+    require("util.keymap")
     local tree = require("nvim-tree")
     tree.setup({
 
-        on_attach = "default",
+        on_attach = function(bufnr) -- or "default"
+            local nvim_tree_api = require("nvim-tree.api")
+            -- nvim_tree_api.config.mappings.default_on_attach(bufnr)
+
+            nbufnoremap("<C-l>", function()
+                nvim_tree_api.node.open.horizontal()
+                nvim_tree_api.tree.focus()
+            end, bufnr, "Open file in horizontal split.")
+
+            nbufnoremap("<C-h>", function()
+                nvim_tree_api.node.open.vertical()
+                nvim_tree_api.tree.focus()
+            end, bufnr, "Open file in vertical split.")
+
+            nbufnoremap("<C-n>", function()
+                vim.cmd.tabprevious()
+                nvim_tree_api.tree.focus()
+            end, bufnr, "Goto previous tab.")
+
+            nbufnoremap("<C-m>", function()
+                vim.cmd.tabnext()
+                nvim_tree_api.tree.focus()
+            end, bufnr, "Goto next tab.")
+
+            nbufnoremap(";", function()
+                nvim_tree_api.node.open.edit()
+                nvim_tree_api.tree.focus()
+            end, bufnr, "Open file in pane.")
+
+            nbufnoremap("'", function()
+                nvim_tree_api.node.open.tab()
+                nvim_tree_api.tree.focus()
+            end, bufnr, "Open file in new tab.")
+
+            nbufnoremap(":", function()
+                nvim_tree_api.tree.change_root_to_node()
+            end, bufnr, "Change root to node.")
+        end,
 
         hijack_cursor = false,
 
