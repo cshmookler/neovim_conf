@@ -7,12 +7,12 @@ return function()
             local nvim_tree_api = require("nvim-tree.api")
             -- nvim_tree_api.config.mappings.default_on_attach(bufnr)
 
-            nbufnoremap("<C-l>", function()
+            nbufnoremap("<C-h>", function()
                 nvim_tree_api.node.open.horizontal()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in horizontal split.")
 
-            nbufnoremap("<C-h>", function()
+            nbufnoremap("<C-l>", function()
                 nvim_tree_api.node.open.vertical()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in vertical split.")
@@ -39,7 +39,35 @@ return function()
 
             nbufnoremap(":", function()
                 nvim_tree_api.tree.change_root_to_node()
+                -- local node = nvim_tree_api.tree.get_node_under_cursor()
+                -- print("path: " .. path)
+                -- print("name: " .. name)
+                -- vim.cmd.cd(node.path .. node.name)
             end, bufnr, "Change root to node.")
+
+            nbufnoremap("R", function()
+                nvim_tree_api.tree.reload()
+            end, bufnr, "Reload tree.")
+
+            nbufnoremap("K", function()
+                nvim_tree_api.node.show_info_popup()
+            end, bufnr, "Show info popup.")
+
+            nbufnoremap("d", function()
+                nvim_tree_api.fs.trash()
+            end, bufnr, "Remove a file or directory.")
+
+            nbufnoremap("D", function()
+                nvim_tree_api.fs.remove()
+            end, bufnr, "Delete a file or directory.")
+
+            nbufnoremap("r", function()
+                nvim_tree_api.fs.rename()
+            end, bufnr, "Rename file or directory.")
+
+            nbufnoremap("a", function()
+                nvim_tree_api.fs.create()
+            end, bufnr, "Create new file or directory.")
         end,
 
         hijack_cursor = false,
