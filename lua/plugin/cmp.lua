@@ -124,7 +124,7 @@ return function()
         nnoremap("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
         nnoremap("<Leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
         nnoremap("<Leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-        nnoremap("K", vim.lsp.buf.hover, "[H]over")
+        nnoremap("Y", vim.lsp.buf.hover, "Hover")
 
         -- Inlay hints
         if client.server_capabilities.inlayHintProvider then

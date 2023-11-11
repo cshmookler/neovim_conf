@@ -12,6 +12,9 @@ return function()
     nnoremap("<C-K>", "K")
     nnoremap("<C-L>", "L")
 
+    -- More intuitive redo
+    nnoremap("U", "<C-r>")
+
     -- Quickly move between panes.
     nnoremap("<C-h>", "<C-w>h")
     nnoremap("<C-j>", "<C-w>j")

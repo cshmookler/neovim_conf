@@ -78,5 +78,11 @@ return function()
             ft = { "markdown" },
             build = function() vim.fn["mkdp#util#install"]() end,
         },
+
+        {
+            "max397574/better-escape.nvim",
+            config = require("plugin.better-escape"),
+        },
+
     })
 end
