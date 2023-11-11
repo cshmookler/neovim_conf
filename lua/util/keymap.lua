@@ -1,4 +1,4 @@
-function noremap(mode, lhs, rhs, desc)
+noremap = function(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, {
         noremap = true,
         silent = true,
@@ -7,7 +7,7 @@ function noremap(mode, lhs, rhs, desc)
     })
 end
 
-function bufnoremap(mode, lhs, rhs, bufnr, desc)
+bufnoremap = function(mode, lhs, rhs, bufnr, desc)
     vim.keymap.set(mode, lhs, rhs, {
         noremap = true,
         silent = true,
@@ -17,14 +17,14 @@ function bufnoremap(mode, lhs, rhs, bufnr, desc)
     })
 end
 
-function nbufnoremap(lhs, rhs, bufnr, desc)
+nbufnoremap = function(lhs, rhs, bufnr, desc)
     bufnoremap("n", lhs, rhs, bufnr, desc)
 end
 
-function nnoremap(lhs, rhs, desc)
+nnoremap = function(lhs, rhs, desc)
     noremap("n", lhs, rhs, desc)
 end
 
-function tnoremap(lhs, rhs, desc)
+tnoremap = function(lhs, rhs, desc)
     noremap("t", lhs, rhs, desc)
 end

@@ -1,17 +1,28 @@
 return function()
     require("util.keymap")
 
-    -- Quick buffer management.
-    nnoremap("<Leader>q", ":q<CR>")
-    nnoremap("<Leader>Q", ":qa<CR>")
-    nnoremap("<Leader>w", ":w<CR>")
-    nnoremap("<Leader>W", ":wa<CR>")
+    -- Fast vertical movement.
+    nnoremap("H", "3w")
+    nnoremap("J", "3j")
+    nnoremap("K", "3k")
+    nnoremap("L", "3b")
+    -- Remap the above keys.
+    nnoremap("<C-H>", "H")
+    nnoremap("<C-J>", "J")
+    nnoremap("<C-K>", "K")
+    nnoremap("<C-L>", "L")
 
     -- Quickly move between panes.
     nnoremap("<C-h>", "<C-w>h")
     nnoremap("<C-j>", "<C-w>j")
     nnoremap("<C-k>", "<C-w>k")
     nnoremap("<C-l>", "<C-w>l")
+
+    -- Quick buffer management.
+    nnoremap("<Leader>q", ":q<CR>")
+    nnoremap("<Leader>Q", ":qa<CR>")
+    nnoremap("<Leader>w", ":w<CR>")
+    nnoremap("<Leader>W", ":wa<CR>")
 
     -- Quick tab management.
     nnoremap("<C-m>", vim.cmd.tabnext)

@@ -62,8 +62,8 @@ return function()
         mapping = {
             ["<C-p>"] = function() end,
             ["<C-n>"] = function() end,
-            ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-            ["<C-u>"] = cmp.mapping.scroll_docs(4),
+            ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+            ["<C-d>"] = cmp.mapping.scroll_docs(4),
             -- ["<C-Space>"] = cmp.mapping.complete(),
             ["<C-e>"] = cmp.mapping.abort(),
             ["<C-Space>"] = cmp.mapping.confirm({
@@ -114,6 +114,8 @@ return function()
     nnoremap("gbb", vim.diagnostic.setloclist, "Goto diagnostic list")
     nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
 
+    local lsp = {} -- Forward declaration for reference in on_attach.
+
     local on_attach = function(client, bufnr)
         nnoremap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
         nnoremap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
@@ -128,6 +130,23 @@ return function()
         if client.server_capabilities.inlayHintProvider then
             vim.lsp.inlay_hint(bufnr, true)
         end
+
+        if client.server_capabilities.documentOnTypeFormattingProvider then
+            -- Format command and format on save.
+            vim.api.nvim_buf_create_user_command(0, "Format", function()
+                vim.lsp.buf.format()
+            end, {})
+            if lsp[client.name].format_on_save then
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                    buffer = bufnr,
+                    callback = function()
+                        local view = vim.fn.winsaveview()
+                        vim.lsp.buf.format({ bufnr = bufnr })
+                        vim.fn.winrestview(view)
+                    end,
+                })
+            end
+        end
     end
 
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -137,9 +156,9 @@ return function()
         lspconfig = false,
     })
 
-    local lsp = {
+    lsp = {
 
-        {
+        ["lua-language-server"] = {
             name = "lua-language-server",
             cmd = { "lua-language-server" },
             filetypes = { "lua" },
@@ -166,7 +185,7 @@ return function()
             capabilities = capabilities,
         },
 
-        {
+        ["clangd"] = {
             name = "clangd",
             cmd = { "clangd" },
             filetypes = { "c", "cpp", "objc", "objcpp" },
@@ -183,7 +202,7 @@ return function()
             capabilities = capabilities,
         },
 
-        {
+        ["Swift-MesonLSP"] = {
             name = "Swift-MesonLSP",
             cmd = { "Swift-MesonLSP", "--lsp" },
             filetypes = { "meson" },
@@ -206,21 +225,6 @@ return function()
                     return
                 end
                 vim.lsp.buf_attach_client(0, client)
-
-                -- Format command and format on save.
-                vim.api.nvim_buf_create_user_command(0, "Format", function()
-                    vim.lsp.buf.format()
-                end, {})
-                if config.format_on_save then
-                    vim.api.nvim_create_autocmd("BufWritePre", {
-                        buffer = 0,
-                        callback = function()
-                            local view = vim.fn.winsaveview()
-                            vim.lsp.buf.format()
-                            vim.fn.winrestview(view)
-                        end,
-                    })
-                end
             end,
         })
     end
