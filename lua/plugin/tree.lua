@@ -28,6 +28,10 @@ return function()
             end, bufnr, "Goto next tab.")
 
             nbufnoremap(";", function()
+                local node = nvim_tree_api.tree.get_node_under_cursor()
+                if node.type == nil and node.name == ".." then
+                    vim.cmd.tcd(node.absolute_path)
+                end
                 nvim_tree_api.node.open.edit()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in pane.")
@@ -38,18 +42,18 @@ return function()
             end, bufnr, "Open file in new tab.")
 
             nbufnoremap(":", function()
+                local node = nvim_tree_api.tree.get_node_under_cursor()
+                if node.type == "directory" then
+                    vim.cmd.tcd(node.absolute_path)
+                end
                 nvim_tree_api.tree.change_root_to_node()
-                -- local node = nvim_tree_api.tree.get_node_under_cursor()
-                -- print("path: " .. path)
-                -- print("name: " .. name)
-                -- vim.cmd.cd(node.path .. node.name)
             end, bufnr, "Change root to node.")
 
             nbufnoremap("R", function()
                 nvim_tree_api.tree.reload()
             end, bufnr, "Reload tree.")
 
-            nbufnoremap("K", function()
+            nbufnoremap("Y", function()
                 nvim_tree_api.node.show_info_popup()
             end, bufnr, "Show info popup.")
 
@@ -84,7 +88,7 @@ return function()
 
         prefer_startup_root = false,
 
-        sync_root_with_cwd = true,
+        sync_root_with_cwd = false,
 
         reload_on_bufenter = false,
 
