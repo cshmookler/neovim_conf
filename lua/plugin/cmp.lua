@@ -232,7 +232,7 @@ return function()
                 on_attach(client, bufnr)
                 vim.api.nvim_create_autocmd("BufWritePost", {
                     buffer = bufnr,
-                    command = "silent ! black %",
+                    command = "silent ! black --line-length 80 % ",
                 })
             end,
             capabilities = capabilities,
