@@ -162,6 +162,7 @@ return function()
             name = "lua-language-server",
             cmd = { "lua-language-server" },
             filetypes = { "lua" },
+            auto_start = true,
             before_init = require("neodev.lsp").before_init,
             root_dir = vim.loop.cwd(),
             format_on_save = true,
@@ -189,6 +190,7 @@ return function()
             name = "clangd",
             cmd = { "clangd" },
             filetypes = { "c", "cpp", "objc", "objcpp" },
+            auto_start = true,
             root_dir = vim.loop.cwd(),
             format_on_save = true,
             -- root_dir = vim.fs.dirname(vim.fs.find({
@@ -206,6 +208,7 @@ return function()
             name = "Swift-MesonLSP",
             cmd = { "Swift-MesonLSP", "--lsp" },
             filetypes = { "meson" },
+            auto_start = true,
             root_dir = vim.loop.cwd(),
             -- root_dir = vim.fs.dirname(vim.fs.find({
             --     ".git",
@@ -218,6 +221,7 @@ return function()
             name = "pyright",
             cmd = { "pyright-langserver", "--stdio" },
             filetypes = { "python" },
+            auto_start = true,
             root_dir = vim.loop.cwd(),
             settings = {
                 python = {
@@ -238,9 +242,31 @@ return function()
             capabilities = capabilities,
         },
 
+        ["jdtls"] = {
+            name = "jdtls",
+            cmd = {
+                "jdtls",
+                "-configuration",
+                vim.fn.expand("$HOME/.cache/jdtls/config"),
+                "-data",
+                vim.fn.expand("$HOME/.cache/jdtls/workspace"),
+            },
+            init_options = {
+                jvm_args = {},
+                workspace = vim.fn.expand("$HOME/.cache/jdtls/workspace")
+            },
+            filetypes = { "java" },
+            root_dir = vim.fn.getcwd(),
+            format_on_save = true,
+            on_attach = on_attach,
+            capabilities = capabilities,
+        },
     }
 
     for _, config in pairs(lsp) do
+        if not config.auto_start then
+            goto continue
+        end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = config.filetypes,
             callback = function()
@@ -251,31 +277,13 @@ return function()
                 vim.lsp.buf_attach_client(0, client)
             end,
         })
+        ::continue::
     end
 
-    local jdtls_config = {
-        name = "jdtls",
-        cmd = {
-            "jdtls",
-            "-configuration",
-            vim.fn.expand("$HOME/.cache/jdtls/config"),
-            "-data",
-            vim.fn.expand("$HOME/.cache/jdtls/workspace"),
-        },
-        init_options = {
-            jvm_args = {},
-            workspace = vim.fn.expand("$HOME/.cache/jdtls/workspace")
-        },
-        filetypes = { "java" },
-        root_dir = vim.fn.getcwd(),
-        on_attach = on_attach,
-        capabilities = capabilities,
-    }
-
     vim.api.nvim_create_autocmd("FileType", {
-        pattern = jdtls_config.filetypes,
+        pattern = lsp["jdtls"].filetypes,
         callback = function()
-            require("jdtls").start_or_attach(jdtls_config)
+            require("jdtls").start_or_attach(lsp["jdtls"])
         end,
     })
 
