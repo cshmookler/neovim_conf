@@ -133,7 +133,7 @@ return function()
 
         if client.server_capabilities.documentOnTypeFormattingProvider then
             -- Format command and format on save.
-            vim.api.nvim_buf_create_user_command(0, "Format", function()
+            vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
                 vim.lsp.buf.format()
             end, {})
             if lsp[client.name].format_on_save then
@@ -211,6 +211,30 @@ return function()
             --     ".git",
             -- }, { upward = true })[1] or vim.loop.cwd()),
             on_attach = on_attach,
+            capabilities = capabilities,
+        },
+
+        ["pyright"] = {
+            name = "pyright",
+            cmd = { "pyright-langserver", "--stdio" },
+            filetypes = { "python" },
+            root_dir = vim.loop.cwd(),
+            settings = {
+                python = {
+                    analysis = {
+                        autoSearchPaths = true,
+                        useLibraryCodeForTypes = true,
+                        diagnosticMode = "openFilesOnly",
+                    },
+                },
+            },
+            on_attach = function(client, bufnr)
+                on_attach(client, bufnr)
+                vim.api.nvim_create_autocmd("BufWritePost", {
+                    buffer = bufnr,
+                    command = "silent ! black %",
+                })
+            end,
             capabilities = capabilities,
         },
 
