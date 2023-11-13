@@ -44,8 +44,10 @@ return function()
             extra = true,
         },
 
-        pre_hook = nil,  ---Function to call before (un)comment
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        pre_hook = nil, ---Function to call before (un)comment
 
+        ---@diagnostic disable-next-line: assign-type-mismatch
         post_hook = nil, -- Function to call after (un)comment
 
     })

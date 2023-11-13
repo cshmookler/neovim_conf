@@ -55,6 +55,6 @@ return function()
     vim.opt.undolevels       = 1000          -- Saved undo levels.
     vim.opt.updatetime       = 250           -- Milliseconds between swap file writes when nothing is typed.
     vim.opt.timeoutlen       = 1000          -- Milliseconds to wait for mapped sequences to complete.
-    vim.opt.mouse            = ""            -- Mouse support.
+    vim.opt.mouse            = "a"           -- Mouse support.
     vim.opt.confirm          = true          -- File saving prompt.
 end

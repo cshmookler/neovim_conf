@@ -11,6 +11,7 @@ return function()
     local luasnip = require("luasnip")
     luasnip.config.setup()
 
+    ---@diagnostic disable-next-line: missing-fields
     cmp.setup({
 
         snippet = {
@@ -30,12 +31,14 @@ return function()
         },
 
         window = {
+            ---@diagnostic disable-next-line: missing-fields
             completion = {
                 scrolloff = 5,
                 col_offset = 0,
                 side_padding = 1,
                 scrollbar = true,
             },
+            ---@diagnostic disable-next-line: missing-fields
             documentation = {},
         },
 
@@ -49,6 +52,7 @@ return function()
                     calc = "Calc",
                     emoji = "Emoji",
                     buffer = "Buffer",
+                    dictionary = "Dictionary",
                 }
                 item.kind = kind[entry.source.name]
                 return item
@@ -57,14 +61,18 @@ return function()
         },
 
         sources = {
-            { name = "nvim_lsp" },
             { name = "nvim_lsp_signature_help" },
+            { name = "nvim_lsp" },
             { name = "luasnip" },
+            {
+                name = "buffer",
+                keyword_length = 4,
+            },
             { name = "calc" },
             { name = "emoji" },
             {
-                name = "buffer",
-                keyword_length = 3,
+                name = "dictionary",
+                keyword_length = 5,
             },
         },
 
@@ -95,20 +103,39 @@ return function()
         },
     })
 
+    ---@diagnostic disable-next-line: missing-fields
     cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-            -- { name = "nvim_lsp_document_symbol" },
+            { name = "nvim_lsp_document_symbol" },
             { name = "buffer" },
         }),
     })
 
+    ---@diagnostic disable-next-line: missing-fields
     cmp.setup.cmdline({ ":" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
             { name = "path" },
             { name = "cmdline" },
         })
+    })
+
+    local dictionary = require("cmp_dictionary")
+    dictionary.setup({
+        exact = 2,
+        first_case_insensitive = false,
+        document = false,
+        document_command = "wn %s -over",
+        sqlite = false,
+        max_items = -1,
+        capacity = 5,
+        debug = false,
+    })
+    dictionary.switcher({
+        spelllang = {
+            en = "/home/main/.config/aspell-en/en.dict",
+        },
     })
 
     require("util.keymap")
@@ -127,7 +154,7 @@ return function()
         nnoremap("gI", vim.lsp.buf.implementation, "Goto implementation")
         nnoremap("gr", vim.lsp.buf.references, "Goto references")
         nnoremap("<Leader>rn", vim.lsp.buf.rename, "Rename")
-        nnoremap("<Leader>ca", vim.lsp.buf.code_action, "Code action")
+        nnoremap("<Leader>ca", ":CodeActionMenu<CR>", "Code action") -- vim.lsp.buf.code_action
         nnoremap("Y", vim.lsp.buf.hover, "Hover")
 
         -- Inlay hints
@@ -146,6 +173,7 @@ return function()
                     callback = function()
                         local view = vim.fn.winsaveview()
                         vim.lsp.buf.format({ bufnr = bufnr })
+                        ---@diagnostic disable-next-line: param-type-mismatch
                         vim.fn.winrestview(view)
                     end,
                 })
@@ -293,4 +321,19 @@ return function()
 
     local fidget = require("fidget")
     fidget.setup()
+
+    vim.g.code_action_menu_show_details = false
+    vim.g.code_action_menu_show_diff = true
+    vim.g.code_action_menu_show_action_kind = true
+
+    local lightbulb = require("nvim-lightbulb")
+    lightbulb.setup({
+        autocmd = { enabled = true },
+        sign = {
+            enabled = false,
+        },
+        virtual_text = {
+            enabled = true,
+        },
+    })
 end
