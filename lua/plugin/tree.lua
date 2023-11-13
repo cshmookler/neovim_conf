@@ -10,22 +10,22 @@ return function()
             nbufnoremap("<C-h>", function()
                 nvim_tree_api.node.open.horizontal()
                 nvim_tree_api.tree.focus()
-            end, bufnr, "Open file in horizontal split.")
+            end, bufnr, "Open file in horizontal split")
 
             nbufnoremap("<C-l>", function()
                 nvim_tree_api.node.open.vertical()
                 nvim_tree_api.tree.focus()
-            end, bufnr, "Open file in vertical split.")
+            end, bufnr, "Open file in vertical split")
 
             nbufnoremap("<C-n>", function()
                 vim.cmd.tabprevious()
                 nvim_tree_api.tree.focus()
-            end, bufnr, "Goto previous tab.")
+            end, bufnr, "Goto previous tab")
 
             nbufnoremap("<C-m>", function()
                 vim.cmd.tabnext()
                 nvim_tree_api.tree.focus()
-            end, bufnr, "Goto next tab.")
+            end, bufnr, "Goto next tab")
 
             nbufnoremap(";", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
@@ -34,12 +34,12 @@ return function()
                 end
                 nvim_tree_api.node.open.edit()
                 nvim_tree_api.tree.focus()
-            end, bufnr, "Open file in pane.")
+            end, bufnr, "Open file in pane")
 
             nbufnoremap("'", function()
                 nvim_tree_api.node.open.tab()
                 nvim_tree_api.tree.focus()
-            end, bufnr, "Open file in new tab.")
+            end, bufnr, "Open file in new tab")
 
             nbufnoremap(":", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
@@ -47,31 +47,31 @@ return function()
                     vim.cmd.tcd(node.absolute_path)
                 end
                 nvim_tree_api.tree.change_root_to_node()
-            end, bufnr, "Change root to node.")
+            end, bufnr, "Change root to node")
 
             nbufnoremap("R", function()
                 nvim_tree_api.tree.reload()
-            end, bufnr, "Reload tree.")
+            end, bufnr, "Reload tree")
 
             nbufnoremap("Y", function()
                 nvim_tree_api.node.show_info_popup()
-            end, bufnr, "Show info popup.")
+            end, bufnr, "Show info popup")
 
             nbufnoremap("d", function()
                 nvim_tree_api.fs.trash()
-            end, bufnr, "Remove a file or directory.")
+            end, bufnr, "Remove a file or directory")
 
             nbufnoremap("D", function()
                 nvim_tree_api.fs.remove()
-            end, bufnr, "Delete a file or directory.")
+            end, bufnr, "Delete a file or directory")
 
             nbufnoremap("r", function()
                 nvim_tree_api.fs.rename()
-            end, bufnr, "Rename file or directory.")
+            end, bufnr, "Rename file or directory")
 
             nbufnoremap("a", function()
                 nvim_tree_api.fs.create()
-            end, bufnr, "Create new file or directory.")
+            end, bufnr, "Create new file or directory")
         end,
 
         hijack_cursor = false,

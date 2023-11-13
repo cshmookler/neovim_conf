@@ -17,7 +17,7 @@ return function()
 
     -- Line wrapping
     vim.opt.wrap             = true -- Enable line wrapping.
-    vim.opt.linebreak        = false -- Wrap lines by words.
+    vim.opt.linebreak        = true -- Wrap lines by words.
     vim.opt.breakindent      = true -- Wrap lines at the same indentation level.
     vim.opt.breakindentopt   = {
         "min:20", -- Minimum text width kept after indenting.
@@ -25,7 +25,7 @@ return function()
         "sbr", -- Display the 'showbreak' value before applying the indent.
     }
     vim.opt.showbreak        = "↳ " -- Displayed before wrapped lines.
-    vim.opt.textwidth        = 80 -- Automatically wrap words past a certain column.
+    -- vim.opt.textwidth        = 80 -- Automatically wrap words past a certain column.
 
     -- UI
     vim.opt.termguicolors    = false                                -- 24-bit RGB color support.

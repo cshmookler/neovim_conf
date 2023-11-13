@@ -117,13 +117,13 @@ return function()
     local lsp = {} -- Forward declaration for reference in on_attach.
 
     local on_attach = function(client, bufnr)
-        nnoremap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-        nnoremap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-        nnoremap("gt", vim.lsp.buf.type_definition, "[G]oto [T]ype Defition")
-        nnoremap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-        nnoremap("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
-        nnoremap("<Leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-        nnoremap("<Leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+        nnoremap("gd", vim.lsp.buf.definition, "Goto definition")
+        nnoremap("gD", vim.lsp.buf.declaration, "Goto declaration")
+        nnoremap("gt", vim.lsp.buf.type_definition, "Goto type defition")
+        nnoremap("gI", vim.lsp.buf.implementation, "Goto implementation")
+        nnoremap("gr", vim.lsp.buf.references, "Goto references")
+        nnoremap("<Leader>rn", vim.lsp.buf.rename, "Rename")
+        nnoremap("<Leader>ca", vim.lsp.buf.code_action, "Code action")
         nnoremap("Y", vim.lsp.buf.hover, "Hover")
 
         -- Inlay hints

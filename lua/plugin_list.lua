@@ -61,6 +61,17 @@ return function()
             config = require("plugin.tree"),
         },
 
+        -- {
+        --     "nvim-neo-tree/neo-tree.nvim",
+        --     branch = "v3.x",
+        --     dependencies = {
+        --         "nvim-lua/plenary.nvim",
+        --         "MunifTanjim/nui.nvim",
+        --         "3rd/image.nvim",
+        --     },
+        --     config = require("plugin.neo-tree"),
+        -- },
+
         {
             "airblade/vim-gitgutter",
         },
@@ -83,6 +94,14 @@ return function()
             "max397574/better-escape.nvim",
             config = require("plugin.better-escape"),
         },
+
+        {
+            "folke/which-key.nvim",
+            config = function()
+                local which_key = require("which-key")
+                which_key.setup({})
+            end,
+        }
 
     })
 end
