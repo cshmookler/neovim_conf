@@ -40,36 +40,40 @@ return function()
         },
 
         formatting = {
-            -- fields = { "menu", "abbr", "kind" },
-            fields = { "abbr", "kind", "menu" },
+            fields = { "abbr", "kind" },
+            format = function(entry, item)
+                local kind = {
+                    nvim_lsp = item.kind,
+                    nvim_lsp_signature_help = "Signature",
+                    luasnip = "Snippet",
+                    calc = "Calc",
+                    emoji = "Emoji",
+                    buffer = "Buffer",
+                }
+                item.kind = kind[entry.source.name]
+                return item
+            end,
             expandable_indicator = true,
         },
 
         sources = {
             { name = "nvim_lsp" },
-            { name = "luasnip" },
             { name = "nvim_lsp_signature_help" },
+            { name = "luasnip" },
             { name = "calc" },
             { name = "emoji" },
             {
                 name = "buffer",
-                entry_filter = function(entry, _)
-                    return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
-                end,
+                keyword_length = 3,
             },
         },
 
         mapping = {
-            ["<C-p>"] = function() end,
-            ["<C-n>"] = function() end,
             ["<C-u>"] = cmp.mapping.scroll_docs(-4),
             ["<C-d>"] = cmp.mapping.scroll_docs(4),
-            -- ["<C-Space>"] = cmp.mapping.complete(),
             ["<C-e>"] = cmp.mapping.abort(),
-            ["<C-Space>"] = cmp.mapping.confirm({
-                behavior = cmp.ConfirmBehavior.Replace,
-                select = true,
-            }),
+            ["<C-Space>"] = cmp.mapping.complete(),
+            [" "] = cmp.mapping.confirm({ select = false }),
             ["<Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()

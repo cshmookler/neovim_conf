@@ -25,6 +25,10 @@ nnoremap = function(lhs, rhs, desc)
     noremap("n", lhs, rhs, desc)
 end
 
+isnoremap = function(lhs, rhs, desc)
+    noremap({ "i", "s" }, lhs, rhs, desc)
+end
+
 nvnoremap = function(lhs, rhs, desc)
     noremap({ "n", "v" }, lhs, rhs, desc)
 end
