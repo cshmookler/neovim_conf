@@ -30,10 +30,11 @@ return function()
             nbufnoremap(";", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 if node.type == nil and node.name == ".." then
-                    vim.cmd.tcd(node.absolute_path)
+                    vim.cmd.tcd("..")
+                else
+                    nvim_tree_api.node.open.edit()
+                    nvim_tree_api.tree.focus()
                 end
-                nvim_tree_api.node.open.edit()
-                nvim_tree_api.tree.focus()
             end, bufnr, "Open file in pane")
 
             nbufnoremap("'", function()
@@ -46,7 +47,6 @@ return function()
                 if node.type == "directory" then
                     vim.cmd.tcd(node.absolute_path)
                 end
-                nvim_tree_api.tree.change_root_to_node()
             end, bufnr, "Change root to node")
 
             nbufnoremap("R", function()
@@ -88,7 +88,7 @@ return function()
 
         prefer_startup_root = false,
 
-        sync_root_with_cwd = false,
+        sync_root_with_cwd = true,
 
         reload_on_bufenter = false,
 
