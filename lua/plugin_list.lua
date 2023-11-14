@@ -93,7 +93,22 @@ return function()
                 local which_key = require("which-key")
                 which_key.setup({})
             end,
-        }
+        },
+
+        {
+            "nvim-treesitter/nvim-treesitter",
+            build = ":TSUpdate",
+            config = require("plugin.treesitter"),
+        },
+
+        {
+            "ThePrimeagen/refactoring.nvim",
+            dependencies = {
+                "nvim-lua/plenary.nvim",
+                "nvim-treesitter/nvim-treesitter",
+            },
+            config = require("plugin.refactoring"),
+        },
 
     })
 end

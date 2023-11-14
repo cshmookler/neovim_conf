@@ -169,7 +169,7 @@ return function()
 
     nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
     nnoremap("gn", vim.diagnostic.goto_prev, "Goto previous diagnostic")
-    nnoremap("gbb", vim.diagnostic.setloclist, "Goto diagnostic list")
+    nnoremap("gB", vim.diagnostic.setloclist, "Goto diagnostic list")
     nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
 
     local lsp = {} -- Forward declaration for reference in on_attach.

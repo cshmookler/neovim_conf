@@ -49,6 +49,15 @@ return function()
     -- WhichKey mappings.
     nnoremap("<Leader>?", ":WhichKey<CR>", "Show custom keymaps");
 
+    -- Refactoring.
+    xnoremap_prompt("<Leader>re", ":Refactor extract ", "Extract")
+    xnoremap_prompt("<Leader>rf", ":Refactor extract_to_file ", "Extract to file")
+    xnoremap_prompt("<Leader>rv", ":Refactor extract_var ", "Extract variable")
+    noremap_prompt({ "n", "x" }, "<leader>ri", ":Refactor inline_var", "Inline variable")
+    nnoremap_prompt("<Leader>rI", ":Refactor inline_func", "Inline function")
+    nnoremap_prompt("<Leader>rb", ":Refactor extract_block", "Extract block")
+    nnoremap_prompt("<Leader>rbf", ":Refactor extract_block_to_file", "Extract block to file")
+
     -- Recognize common template file extensions.
     vim.cmd.au("BufNewFile,BufRead", "*.py.tmpl", ":set filetype=python")
     vim.cmd.au("BufNewFile,BufRead", "meson.build.tmpl", ":set filetype=meson")
