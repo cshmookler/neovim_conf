@@ -8,6 +8,7 @@ return function()
     })
 
     local cmp = require("cmp")
+    local cmp_context = require("cmp.config.context")
     local luasnip = require("luasnip")
     luasnip.config.setup()
 
@@ -61,18 +62,39 @@ return function()
         },
 
         sources = {
-            { name = "nvim_lsp_signature_help" },
-            { name = "nvim_lsp" },
-            { name = "luasnip" },
+            {
+                name = "nvim_lsp_signature_help",
+                keyword_length = 1,
+            },
+            {
+                name = "nvim_lsp",
+                keyword_length = 2,
+                entry_filter = function(entry, _)
+                    return cmp.lsp.CompletionItemKind.Text ~= entry:get_kind()
+                end,
+            },
+            {
+                name = "luasnip",
+                keyword_length = 2,
+            },
             {
                 name = "buffer",
-                keyword_length = 4,
+                keyword_length = 3,
             },
-            { name = "calc" },
-            { name = "emoji" },
+            {
+                name = "calc",
+                keyword_length = 1,
+            },
+            {
+                name = "emoji",
+                keyword_length = 1,
+            },
             {
                 name = "dictionary",
-                keyword_length = 5,
+                keyword_length = 3,
+                entry_filter = function(_, _)
+                    return cmp_context.in_syntax_group("Comment") or cmp_context.in_treesitter_capture("comment")
+                end,
             },
         },
 
@@ -80,8 +102,13 @@ return function()
             ["<C-u>"] = cmp.mapping.scroll_docs(-4),
             ["<C-d>"] = cmp.mapping.scroll_docs(4),
             ["<C-e>"] = cmp.mapping.abort(),
-            ["<C-Space>"] = cmp.mapping.complete(),
-            [" "] = cmp.mapping.confirm({ select = false }),
+            ["<C-Space>"] = cmp.mapping(function(_)
+                if cmp.visible() then
+                    cmp.confirm()
+                else
+                    cmp.complete()
+                end
+            end, { "i", "s" }),
             ["<Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
@@ -134,7 +161,7 @@ return function()
     })
     dictionary.switcher({
         spelllang = {
-            en = "/home/main/.config/aspell-en/en.dict",
+            en = "~/.config/aspell-en/en.dict",
         },
     })
 
@@ -326,14 +353,11 @@ return function()
     vim.g.code_action_menu_show_diff = true
     vim.g.code_action_menu_show_action_kind = true
 
-    local lightbulb = require("nvim-lightbulb")
-    lightbulb.setup({
-        autocmd = { enabled = true },
-        sign = {
-            enabled = false,
-        },
-        virtual_text = {
-            enabled = true,
-        },
-    })
+    -- local lightbulb = require("nvim-lightbulb")
+    -- lightbulb.setup({
+    --     autocmd = { enabled = true },
+    --     sign = {
+    --         enabled = true,
+    --     },
+    -- })
 end
