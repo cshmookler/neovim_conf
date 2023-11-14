@@ -61,6 +61,25 @@ return function()
     -- Zen mode
     nnoremap("<Leader>f", ":ZenMode<CR>", "Toggle zen mode")
 
+    -- Yanky
+    nxnoremap("y", "<Plug>(YankyYank)")
+    nxnoremap("p", "<Plug>(YankyPutAfter)")
+    nxnoremap("P", "<Plug>(YankyPutBefore)")
+    nxnoremap("gp", "<Plug>(YankyGPutAfter)")
+    nxnoremap("gP", "<Plug>(YankyGPutBefore)")
+    nnoremap("t", "<Plug>(YankyCycleForward)")
+    nnoremap("T", "<Plug>(YankyCycleBackward)")
+    nnoremap("]p", "<Plug>(YankyPutIndentAfterLinewise)")
+    nnoremap("[p", "<Plug>(YankyPutIndentBeforeLinewise)")
+    nnoremap("]P", "<Plug>(YankyPutIndentAfterLinewise)")
+    nnoremap("[P", "<Plug>(YankyPutIndentBeforeLinewise)")
+    nnoremap(">p", "<Plug>(YankyPutIndentAfterShiftRight)")
+    nnoremap("<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
+    nnoremap(">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
+    nnoremap("<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
+    nnoremap("=p", "<Plug>(YankyPutAfterFilter)")
+    nnoremap("=P", "<Plug>(YankyPutBeforeFilter)")
+
     -- Recognize common template file extensions
     vim.cmd.au("BufNewFile,BufRead", "*.py.tmpl", ":set filetype=python")
     vim.cmd.au("BufNewFile,BufRead", "meson.build.tmpl", ":set filetype=meson")

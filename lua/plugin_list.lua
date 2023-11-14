@@ -115,5 +115,10 @@ return function()
             config = require("plugin.zen")
         },
 
+        {
+            "gbprod/yanky.nvim",
+            config = require("plugin.yanky")
+        },
+
     })
 end
