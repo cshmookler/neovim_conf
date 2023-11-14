@@ -110,5 +110,10 @@ return function()
             config = require("plugin.refactoring"),
         },
 
+        {
+            "folke/zen-mode.nvim",
+            config = require("plugin.zen")
+        },
+
     })
 end
