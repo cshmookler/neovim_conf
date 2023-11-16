@@ -189,7 +189,7 @@ return function()
             vim.lsp.inlay_hint(bufnr, true)
         end
 
-        if client.server_capabilities.documentOnTypeFormattingProvider then
+        if lsp[client.name].format and client.server_capabilities.documentOnTypeFormattingProvider then
             -- Format command and format on save.
             vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
                 vim.lsp.buf.format()
@@ -224,6 +224,7 @@ return function()
             auto_start = true,
             before_init = require("neodev.lsp").before_init,
             root_dir = vim.loop.cwd(),
+            format = true,
             format_on_save = true,
             -- root_dir = vim.fs.dirname(vim.fs.find({
             --     ".git",
@@ -251,6 +252,7 @@ return function()
             filetypes = { "c", "cpp", "objc", "objcpp" },
             auto_start = true,
             root_dir = vim.loop.cwd(),
+            format = true,
             format_on_save = true,
             -- root_dir = vim.fs.dirname(vim.fs.find({
             --     ".git",
@@ -269,10 +271,18 @@ return function()
             filetypes = { "meson" },
             auto_start = true,
             root_dir = vim.loop.cwd(),
+            format = false,
+            format_on_save = false,
             -- root_dir = vim.fs.dirname(vim.fs.find({
             --     ".git",
             -- }, { upward = true })[1] or vim.loop.cwd()),
-            on_attach = on_attach,
+            on_attach = function(client, bufnr)
+                on_attach(client, bufnr)
+                vim.api.nvim_create_autocmd("BufWritePost", {
+                    buffer = bufnr,
+                    command = "silent ! muon fmt -c muon_fmt.ini -i %",
+                })
+            end,
             capabilities = capabilities,
         },
 
@@ -282,6 +292,8 @@ return function()
             filetypes = { "python" },
             auto_start = true,
             root_dir = vim.loop.cwd(),
+            format = false,
+            format_on_save = false,
             settings = {
                 python = {
                     analysis = {
@@ -316,6 +328,7 @@ return function()
             },
             filetypes = { "java" },
             root_dir = vim.fn.getcwd(),
+            format = true,
             format_on_save = true,
             on_attach = on_attach,
             capabilities = capabilities,

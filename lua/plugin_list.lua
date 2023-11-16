@@ -112,12 +112,12 @@ return function()
 
         {
             "folke/zen-mode.nvim",
-            config = require("plugin.zen")
+            config = require("plugin.zen"),
         },
 
         {
             "gbprod/yanky.nvim",
-            config = require("plugin.yanky")
+            config = require("plugin.yanky"),
         },
 
     })
