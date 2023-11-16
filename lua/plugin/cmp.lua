@@ -184,8 +184,11 @@ return function()
         nnoremap("<Leader>ca", ":CodeActionMenu<CR>", "Code action") -- vim.lsp.buf.code_action
         nnoremap("Y", vim.lsp.buf.hover, "Hover")
 
-        -- Inlay hints
+        -- Treesitter highlighting
+        vim.treesitter.start(bufnr)
+
         if client.server_capabilities.inlayHintProvider then
+            -- Inlay hints
             vim.lsp.inlay_hint(bufnr, true)
         end
 
@@ -259,7 +262,6 @@ return function()
             --     ".clangd",
             --     ".clang-format",
             --     ".clang-tidy",
-            --     "compile_commands.json",
             -- }, { upward = true })[1] or vim.loop.cwd()),
             on_attach = on_attach,
             capabilities = capabilities,

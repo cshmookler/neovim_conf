@@ -96,16 +96,10 @@ return function()
         },
 
         {
-            "nvim-treesitter/nvim-treesitter",
-            build = ":TSUpdate",
-            config = require("plugin.treesitter"),
-        },
-
-        {
             "ThePrimeagen/refactoring.nvim",
             dependencies = {
                 "nvim-lua/plenary.nvim",
-                "nvim-treesitter/nvim-treesitter",
+                { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
             },
             config = require("plugin.refactoring"),
         },
