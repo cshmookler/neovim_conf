@@ -32,15 +32,8 @@ return function()
         },
 
         window = {
-            ---@diagnostic disable-next-line: missing-fields
-            completion = {
-                scrolloff = 5,
-                col_offset = 0,
-                side_padding = 1,
-                scrollbar = true,
-            },
-            ---@diagnostic disable-next-line: missing-fields
-            documentation = {},
+            completion = cmp.config.window.bordered(),
+            documentation = cmp.config.window.bordered(),
         },
 
         formatting = {
@@ -64,7 +57,6 @@ return function()
         sources = {
             {
                 name = "nvim_lsp_signature_help",
-                keyword_length = 1,
             },
             {
                 name = "nvim_lsp",
@@ -79,22 +71,26 @@ return function()
             },
             {
                 name = "buffer",
-                keyword_length = 3,
+                keyword_length = 2,
+                max_item_count = 5,
             },
             {
                 name = "calc",
                 keyword_length = 1,
+                max_item_count = 5,
             },
             {
                 name = "emoji",
                 keyword_length = 1,
+                max_item_count = 5,
             },
             {
                 name = "dictionary",
-                keyword_length = 3,
-                entry_filter = function(_, _)
-                    return cmp_context.in_syntax_group("Comment") or cmp_context.in_treesitter_capture("comment")
-                end,
+                keyword_length = 2,
+                max_item_count = 5,
+                -- entry_filter = function(_, _)
+                --     return cmp_context.in_syntax_group("Comment") or cmp_context.in_treesitter_capture("comment")
+                -- end,
             },
         },
 
@@ -104,7 +100,7 @@ return function()
             ["<C-e>"] = cmp.mapping.abort(),
             ["<C-Space>"] = cmp.mapping(function(_)
                 if cmp.visible() then
-                    cmp.confirm()
+                    cmp.confirm({ select = true })
                 else
                     cmp.complete()
                 end

@@ -96,6 +96,15 @@ return function()
         },
 
         {
+            "nvim-treesitter/nvim-treesitter",
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter-textobjects",
+            },
+            build = "TSUpdate",
+            config = require("plugin.treesitter"),
+        },
+
+        {
             "ThePrimeagen/refactoring.nvim",
             dependencies = {
                 "nvim-lua/plenary.nvim",
