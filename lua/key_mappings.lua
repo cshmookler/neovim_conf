@@ -33,7 +33,8 @@ return function()
     end, "Open new tab")
 
     -- Integrated terminal
-    nnoremap("<Leader>t", ":split<CR>:terminal<CR>A", "Open terminal")
+    nnoremap("<Leader>t", ":split<CR>:terminal<CR>A", "Open horizontal terminal")
+    nnoremap("<Leader>T", ":vsplit<CR>:terminal<CR>A", "Open vertical terminal")
     tnoremap("<C-e>", "<C-\\><C-n>", "Exit terminal mode")
     tnoremap("<C-h>", "<C-\\><C-n><C-w>h", "Go to the left window")
     tnoremap("<C-j>", "<C-\\><C-n><C-w>j", "Go to the down window")

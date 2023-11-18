@@ -247,7 +247,7 @@ return function()
 
         ["clangd"] = {
             name = "clangd",
-            cmd = { "clangd" },
+            cmd = { "clangd", --[[ "--header-insertion=never" --]] },
             filetypes = { "c", "cpp", "objc", "objcpp" },
             auto_start = true,
             root_dir = vim.loop.cwd(),
