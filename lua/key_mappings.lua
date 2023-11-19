@@ -86,4 +86,92 @@ return function()
     vim.cmd.au("BufNewFile,BufRead", "meson.build.tmpl", ":set filetype=meson")
     vim.cmd.au("BufNewFile,BufRead", "*.hpp.in.tmpl", ":set filetype=cpp")
     vim.cmd.au("BufNewFile,BufRead", "*.cpp.tmpl", ":set filetype=cpp")
+
+    -- Crypt cracker
+    vim.api.nvim_create_user_command("Crypt", function(this)
+        -- Conceal the entered command
+        vim.cmd.echomsg("\"\"")
+
+        -- Delete the entered command from history
+        vim.fn.histdel(":", -1)
+
+        -- Function for saving output from a shell command to a lua variable
+        local vim_cmd = function(cmd)
+            local nvim_exec2 = vim.api.nvim_exec2(cmd, { output = true })
+            return vim.split(nvim_exec2.output, "\n")[3]
+        end
+
+        -- Get command arguments
+        local args = vim.split(this.args, " ")
+        local args_count = vim.tbl_count(args)
+        if args_count ~= 2 then
+            print("Invalid number of arguments")
+            return
+        end
+
+        -- Get path to pad
+        local pad = args[1]
+        if not pad then
+            print("Invalid first argument")
+            return
+        end
+
+        -- Get pad position
+        local pos = args[2]
+        if not pos then
+            print("Invalid second argument")
+            return
+        end
+
+        -- Get path to current buffer
+        local this_file = vim.fn.expand("%")
+        if this_file == "" then
+            print("Invalid buffer")
+            return
+        end
+
+        -- Get path to a temp file
+        local temp_file = vim_cmd("! mktemp")
+        if temp_file == "" then
+            print("Failed to create temp file")
+            return
+        end
+
+        -- Encrypt (or decrypt) the file of the current buffer. Store the resulting data in the temp file.
+        local output = vim_cmd("! xorc " .. this_file .. " " .. temp_file .. " --pad=" .. pad .. " --pos=" .. pos)
+        if output ~= "" then
+            print("First crypt failed: '" .. output .. "'")
+            return
+        end
+
+        -- Disable unnecessary usage of persistent storage
+        vim_cmd("set noundofile noswapfile nobackup")
+
+        -- Edit the temp file
+        vim_cmd("edit " .. temp_file);
+
+        vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "CryptQuit", function(this)
+            -- Encrypt (or decrypt) the temp file and store the resulting data in the original file
+            output = vim_cmd("! xorc " .. temp_file .. " " .. this_file .. " --pad=" .. pad .. " --pos=" .. pos)
+            if output ~= "" then
+                print("Second crypt failed: '" .. output .. "'")
+                return
+            end
+
+            -- Edit the original file
+            vim_cmd("edit! " .. this_file)
+
+            -- Destroy the temp file
+            output = vim_cmd("! shred -zun 3 " .. temp_file)
+            if output ~= "" then
+                print("Failed to remove temp file: '" .. output .. "'")
+                return
+            end
+        end, {})
+
+        vim.api.nvim_create_autocmd({ "ExitPre" }, {
+            buffer = vim.api.nvim_get_current_buf(),
+            command = ":CryptQuit",
+        })
+    end, { nargs = "*" })
 end
