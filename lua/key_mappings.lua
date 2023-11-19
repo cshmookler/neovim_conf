@@ -115,6 +115,7 @@ return function()
             print("Invalid first argument")
             return
         end
+        pad = vim.fs.normalize(pad)
 
         -- Get pad position
         local pos = args[2]
