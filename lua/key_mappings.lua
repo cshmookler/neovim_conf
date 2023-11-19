@@ -151,7 +151,7 @@ return function()
         -- Edit the temp file
         vim_cmd("edit " .. temp_file);
 
-        vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "CryptQuit", function(this)
+        local crypt_quit = function(_)
             -- Encrypt (or decrypt) the temp file and store the resulting data in the original file
             output = vim_cmd("! xorc " .. temp_file .. " " .. this_file .. " --pad=" .. pad .. " --pos=" .. pos)
             if output ~= "" then
@@ -168,11 +168,21 @@ return function()
                 print("Failed to remove temp file: '" .. output .. "'")
                 return
             end
+        end
+
+        vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "CryptQuit", function(_)
+            -- Conceal the entered command
+            vim.cmd.echomsg("\"\"")
+
+            -- Delete the entered command from history
+            vim.fn.histdel(":", -1)
+
+            crypt_quit()
         end, {})
 
         vim.api.nvim_create_autocmd({ "ExitPre" }, {
             buffer = vim.api.nvim_get_current_buf(),
-            command = ":CryptQuit",
+            callback = crypt_quit,
         })
     end, { nargs = "*" })
 end
