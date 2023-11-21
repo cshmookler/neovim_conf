@@ -106,19 +106,7 @@ return function()
         return pcall(vim.api.nvim_command, cmd)
     end
 
-    -- Crypt cracker
-    vim.api.nvim_create_user_command("CryptCrack", function(_)
-        hide_last_cmd()
-
-        local buf = vim.api.nvim_get_current_buf()
-
-        -- Get path to current buffer
-        local orig_file = vim.fn.expand("%")
-        if orig_file == "" then
-            print("Invalid buffer")
-            return
-        end
-
+    local get_crypt_info = function()
         local pad = vim.fn.inputsecret({ prompt = "Pad: " })
         if pad == "" then
             return
@@ -131,6 +119,91 @@ return function()
 
         local pass = vim.fn.inputsecret({ prompt = "Pass: " })
         if pass == "" then
+            return
+        end
+
+        return pad, pos, pass
+    end
+
+    vim.api.nvim_create_user_command("CryptGen", function(_)
+        hide_last_cmd()
+
+        local buf = vim.api.nvim_get_current_buf()
+
+        local pad, pos, pass = get_crypt_info()
+        if not pad or not pos or not pass then
+            return
+        end
+
+        -- Get path to current buffer
+        local orig_file = vim.fn.expand("%")
+        if orig_file == "" then
+            print("Invalid buffer")
+            return
+        end
+
+        -- Create a temp file
+        local temp_file = vim_cmd_with_output("! mktemp")
+        if not temp_file then
+            print("Failed to create temp file")
+            return
+        end
+
+        -- Temporarily disable unnecessary usage of persistent storage
+        local orig_opt_undofile = vim.o.undofile
+        local orig_opt_swapfile = vim.o.swapfile
+        local orig_opt_backup = vim.o.backup
+        vim.opt.undofile = false
+        vim.opt.swapfile = false
+        vim.opt.backup = false
+
+        local cleanup = function()
+            -- Destroy the temp file
+            local output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
+            if not output then
+                print("Failed to remove temp file: '" .. output .. "'")
+                return
+            end
+
+            -- Restore original options
+            vim.opt.undofile = orig_opt_undofile
+            vim.opt.swapfile = orig_opt_swapfile
+            vim.opt.backup = orig_opt_backup
+        end
+
+        -- AES encryption stage
+        if not vim_cmd("silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " .. pass .. " -out " .. temp_file) then
+            print("AES encryption failed")
+            cleanup()
+            return
+        end
+
+        -- XOR encryption stage
+        local output = vim_cmd_with_output("! xorc " ..
+            temp_file .. " " .. orig_file .. " --pad=" .. pad .. " --pos=" .. pos)
+        if not output then
+            print("XOR encryption failed: '" .. output .. "'")
+            cleanup()
+            return
+        end
+
+        cleanup()
+    end, { nargs = "*" })
+
+    vim.api.nvim_create_user_command("CryptCrack", function(_)
+        hide_last_cmd()
+
+        local buf = vim.api.nvim_get_current_buf()
+
+        local pad, pos, pass = get_crypt_info()
+        if not pad or not pos or not pass then
+            return
+        end
+
+        -- Get path to current buffer
+        local orig_file = vim.fn.expand("%")
+        if orig_file == "" then
+            print("Invalid buffer")
             return
         end
 
@@ -213,9 +286,6 @@ return function()
             return
         end
 
-        -- Remove leading newline
-        vim.cmd("1,1s/\n//")
-
         local exited = false
         local crypt_quit = function(_)
             if exited then
@@ -259,5 +329,8 @@ return function()
             buffer = buf,
             callback = crypt_quit,
         })
+
+        -- Remove leading newline
+        vim.cmd("1,1s/\n//")
     end, { nargs = "*" })
 end
