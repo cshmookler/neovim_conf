@@ -108,8 +108,10 @@ return function()
     end
 
     -- Crypt cracker
-    vim.api.nvim_create_user_command("Crypt", function(this)
+    vim.api.nvim_create_user_command("CryptCrack", function(_)
         hide_last_cmd()
+
+        local buf = vim.api.nvim_get_current_buf()
 
         -- Get path to current buffer
         local orig_file = vim.fn.expand("%")
@@ -118,33 +120,18 @@ return function()
             return
         end
 
-        -- Get command arguments
-        local args = vim.split(this.args, " ")
-        local args_count = vim.tbl_count(args)
-        if args_count ~= 3 then
-            print("Invalid number of arguments")
+        local pad = vim.fn.inputsecret({ prompt = "Pad: " })
+        if pad == "" then
             return
         end
 
-        -- Get path to pad
-        local pad = args[1]
-        if not pad then
-            print("Invalid pad path")
-            return
-        end
-        pad = vim.fs.normalize(pad)
-
-        -- Get pad position
-        local pos = args[2]
-        if not pos then
-            print("Invalid pad position")
+        local pos = vim.fn.inputsecret({ prompt = "Pos: " })
+        if pos == "" then
             return
         end
 
-        -- Get the password
-        local pass = args[3]
-        if not pass then
-            print("Invalid password")
+        local pass = vim.fn.inputsecret({ prompt = "Pass: " })
+        if pass == "" then
             return
         end
 
@@ -163,8 +150,6 @@ return function()
         vim.opt.swapfile = false
         vim.opt.backup = false
 
-        -- Prevent writing
-
         local cleanup = function()
             -- Destroy the temp file
             local output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
@@ -173,11 +158,14 @@ return function()
                 return
             end
 
-            -- Edit the original file
-            if not vim_cmd("edit! " .. orig_file) then
-                print("Failed to return to the original file")
-                return
-            end
+            -- -- Edit the original file
+            -- if not vim_cmd("edit! " .. orig_file) then
+            --     print("Failed to return to the original file")
+            --     return
+            -- end
+
+            -- Wipeout the buffer
+            vim_cmd(":bwipeout " .. buf)
 
             -- Restore original options
             vim.opt.undofile = orig_opt_undofile
@@ -201,13 +189,14 @@ return function()
             return;
         end
 
+        buf = vim.api.nvim_get_current_buf()
+
         -- AES decryption stage
         if not vim_cmd("%delete") then
             print("Failed to clear buffer")
             cleanup()
             return
         end
-
         if not vim_cmd("read! openssl enc -d -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " ..
                 pass .. " -in " .. temp_file) then
             print("AES decryption failed")
@@ -215,23 +204,32 @@ return function()
             return
         end
 
-        vim.keymap.set("n", "<Leader>w", ":echo 'This file is read-only'<CR>")
-        vim.keymap.set("n", "<Leader>q", ":qa!<CR>")
+        -- Prevent writing unencrypted data to disk
+        vim.bo[buf].buftype = "nofile"
 
-        -- Set the temp file to read only to prevent accidental writes
-        if not vim_cmd("set readonly") then
-            print("Failed to set temp file as read only")
-            cleanup()
+        -- Destroy the temp file
+        output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
+        if not output then
+            print("Failed to remove temp file: '" .. output .. "'")
             return
         end
 
-        vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "RemoveLeadingNewline", function(_)
-            vim.cmd("1,1s/\n//")
-        end, {})
+        -- Remove leading newline
+        vim.cmd("1,1s/\n//")
 
-        vim.cmd("RemoveLeadingNewline")
-
+        local exited = false
         local crypt_quit = function(_)
+            if exited then
+                return
+            end
+
+            -- Create a new temp file
+            temp_file = vim_cmd_with_output("! mktemp")
+            if not temp_file then
+                print("Failed to create new temp file")
+                return
+            end
+
             -- AES encryption stage
             if not vim_cmd("silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " .. pass .. " -out " .. temp_file) then
                 print("AES encryption failed")
@@ -249,16 +247,18 @@ return function()
             end
 
             cleanup()
+
+            exited = true
         end
 
-        vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "CryptQuit", function(_)
+        vim.api.nvim_buf_create_user_command(buf, "CryptQuit", function(_)
             hide_last_cmd()
             crypt_quit()
         end, {})
 
-        vim.api.nvim_create_autocmd({ "ExitPre" }, {
-            buffer = vim.api.nvim_get_current_buf(),
+        vim.api.nvim_create_autocmd({ "BufHidden", "BufLeave", "ExitPre" }, {
+            buffer = buf,
             callback = crypt_quit,
         })
     end, { nargs = "*" })
-end
+end)
