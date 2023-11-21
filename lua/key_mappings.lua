@@ -1,6 +1,5 @@
 return function()
     require("util.keymap")
-
     -- Fast vertical movement
     nvnoremap("H", "3b", "Three words left")
     nvnoremap("J", "3j", "Three lines down")
@@ -261,4 +260,4 @@ return function()
             callback = crypt_quit,
         })
     end, { nargs = "*" })
-end)
+end
