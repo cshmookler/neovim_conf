@@ -48,7 +48,7 @@ return function()
     nnoremap("<C-p>", nvim_tree_api.tree.toggle, "Toggle file tree")
 
     -- WhichKey mappings
-    nnoremap("<Leader>?", ":WhichKey<CR>", "Show custom keymaps");
+    nnoremap("<Leader>?", ":WhichKey<CR>", "Show custom keymaps")
 
     -- Refactoring
     xnoremap_prompt("<Leader>re", ":Refactor extract ", "Extract")
@@ -87,24 +87,41 @@ return function()
     vim.cmd.au("BufNewFile,BufRead", "*.hpp.in.tmpl", ":set filetype=cpp")
     vim.cmd.au("BufNewFile,BufRead", "*.cpp.tmpl", ":set filetype=cpp")
 
-    -- Crypt cracker
-    vim.api.nvim_create_user_command("Crypt", function(this)
+    local hide_last_cmd = function()
         -- Conceal the entered command
         vim.cmd.echomsg("\"\"")
 
         -- Delete the entered command from history
         vim.fn.histdel(":", -1)
+    end
 
-        -- Function for saving output from a shell command to a lua variable
-        local vim_cmd = function(cmd)
-            local nvim_exec2 = vim.api.nvim_exec2(cmd, { output = true })
-            return vim.split(nvim_exec2.output, "\n")[3]
+    local vim_cmd_with_output = function(cmd)
+        local success, output_info = pcall(vim.api.nvim_exec2, cmd, { output = true })
+        if not success then
+            return nil
+        end
+        return vim.split(output_info.output, "\n")[3]
+    end
+
+    local vim_cmd = function(cmd)
+        return pcall(vim.api.nvim_command, cmd)
+    end
+
+    -- Crypt cracker
+    vim.api.nvim_create_user_command("Crypt", function(this)
+        hide_last_cmd()
+
+        -- Get path to current buffer
+        local orig_file = vim.fn.expand("%")
+        if orig_file == "" then
+            print("Invalid buffer")
+            return
         end
 
         -- Get command arguments
         local args = vim.split(this.args, " ")
         local args_count = vim.tbl_count(args)
-        if args_count ~= 2 then
+        if args_count ~= 3 then
             print("Invalid number of arguments")
             return
         end
@@ -112,7 +129,7 @@ return function()
         -- Get path to pad
         local pad = args[1]
         if not pad then
-            print("Invalid first argument")
+            print("Invalid pad path")
             return
         end
         pad = vim.fs.normalize(pad)
@@ -120,63 +137,122 @@ return function()
         -- Get pad position
         local pos = args[2]
         if not pos then
-            print("Invalid second argument")
+            print("Invalid pad position")
             return
         end
 
-        -- Get path to current buffer
-        local this_file = vim.fn.expand("%")
-        if this_file == "" then
-            print("Invalid buffer")
+        -- Get the password
+        local pass = args[3]
+        if not pass then
+            print("Invalid password")
             return
         end
 
-        -- Get path to a temp file
-        local temp_file = vim_cmd("! mktemp")
-        if temp_file == "" then
+        -- Create a temp file
+        local temp_file = vim_cmd_with_output("! mktemp")
+        if not temp_file then
             print("Failed to create temp file")
             return
         end
 
-        -- Encrypt (or decrypt) the file of the current buffer. Store the resulting data in the temp file.
-        local output = vim_cmd("! xorc " .. this_file .. " " .. temp_file .. " --pad=" .. pad .. " --pos=" .. pos)
-        if output ~= "" then
-            print("First crypt failed: '" .. output .. "'")
-            return
-        end
+        -- Temporarily disable unnecessary usage of persistent storage
+        local orig_opt_undofile = vim.o.undofile
+        local orig_opt_swapfile = vim.o.swapfile
+        local orig_opt_backup = vim.o.backup
+        vim.opt.undofile = false
+        vim.opt.swapfile = false
+        vim.opt.backup = false
 
-        -- Disable unnecessary usage of persistent storage
-        vim_cmd("set noundofile noswapfile nobackup")
+        -- Prevent writing
 
-        -- Edit the temp file
-        vim_cmd("edit " .. temp_file);
-
-        local crypt_quit = function(_)
-            -- Encrypt (or decrypt) the temp file and store the resulting data in the original file
-            output = vim_cmd("! xorc " .. temp_file .. " " .. this_file .. " --pad=" .. pad .. " --pos=" .. pos)
-            if output ~= "" then
-                print("Second crypt failed: '" .. output .. "'")
+        local cleanup = function()
+            -- Destroy the temp file
+            local output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
+            if not output then
+                print("Failed to remove temp file: '" .. output .. "'")
                 return
             end
 
             -- Edit the original file
-            vim_cmd("edit! " .. this_file)
-
-            -- Destroy the temp file
-            output = vim_cmd("! shred -zun 3 " .. temp_file)
-            if output ~= "" then
-                print("Failed to remove temp file: '" .. output .. "'")
+            if not vim_cmd("edit! " .. orig_file) then
+                print("Failed to return to the original file")
                 return
             end
+
+            -- Restore original options
+            vim.opt.undofile = orig_opt_undofile
+            vim.opt.swapfile = orig_opt_swapfile
+            vim.opt.backup = orig_opt_backup
+        end
+
+        -- XOR decryption stage
+        local output = vim_cmd_with_output("! xorc " ..
+            orig_file .. " " .. temp_file .. " --pad=" .. pad .. " --pos=" .. pos)
+        if not output then
+            print("XOR decryption failed: '" .. output .. "'")
+            cleanup()
+            return
+        end
+
+        -- Edit the temp file
+        if not vim_cmd("edit! " .. temp_file) then
+            print("Failed to edit temp file")
+            cleanup()
+            return;
+        end
+
+        -- AES decryption stage
+        if not vim_cmd("%delete") then
+            print("Failed to clear buffer")
+            cleanup()
+            return
+        end
+
+        if not vim_cmd("read! openssl enc -d -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " ..
+                pass .. " -in " .. temp_file) then
+            print("AES decryption failed")
+            cleanup()
+            return
+        end
+
+        vim.keymap.set("n", "<Leader>w", ":echo 'This file is read-only'<CR>")
+        vim.keymap.set("n", "<Leader>q", ":qa!<CR>")
+
+        -- Set the temp file to read only to prevent accidental writes
+        if not vim_cmd("set readonly") then
+            print("Failed to set temp file as read only")
+            cleanup()
+            return
+        end
+
+        vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "RemoveLeadingNewline", function(_)
+            vim.cmd("1,1s/\n//")
+        end, {})
+
+        vim.cmd("RemoveLeadingNewline")
+
+        local crypt_quit = function(_)
+            -- AES encryption stage
+            if not vim_cmd("silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " .. pass .. " -out " .. temp_file) then
+                print("AES encryption failed")
+                cleanup()
+                return
+            end
+
+            -- XOR encryption stage
+            output = vim_cmd_with_output("! xorc " ..
+                temp_file .. " " .. orig_file .. " --pad=" .. pad .. " --pos=" .. pos)
+            if not output then
+                print("XOR encryption failed: '" .. output .. "'")
+                cleanup()
+                return
+            end
+
+            cleanup()
         end
 
         vim.api.nvim_buf_create_user_command(vim.api.nvim_get_current_buf(), "CryptQuit", function(_)
-            -- Conceal the entered command
-            vim.cmd.echomsg("\"\"")
-
-            -- Delete the entered command from history
-            vim.fn.histdel(":", -1)
-
+            hide_last_cmd()
             crypt_quit()
         end, {})
 
