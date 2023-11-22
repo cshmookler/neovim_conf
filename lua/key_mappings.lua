@@ -96,14 +96,16 @@ return function()
 
     local vim_cmd_with_output = function(cmd)
         local success, output_info = pcall(vim.api.nvim_exec2, cmd, { output = true })
-        if not success then
+        -- print("cmd: " ..
+        --     cmd .. "\n" .. "status: " .. vim.api.nvim_get_vvar("shell_error") .. "\n" .. "success: " .. tostring(success))
+        if vim.api.nvim_get_vvar("shell_error") ~= 0 then
             return nil
         end
-        return vim.split(output_info.output, "\n")[3]
-    end
-
-    local vim_cmd = function(cmd)
-        return pcall(vim.api.nvim_command, cmd)
+        local output = vim.split(output_info.output, "\n")[3]
+        if not output then
+            return ""
+        end
+        return output
     end
 
     local get_crypt_info = function()
@@ -161,7 +163,7 @@ return function()
             -- Destroy the temp file
             local output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
             if not output then
-                print("Failed to remove temp file: '" .. output .. "'")
+                print("Failed to remove temp file")
                 return
             end
 
@@ -172,17 +174,20 @@ return function()
         end
 
         -- AES encryption stage
-        if not vim_cmd("silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " .. pass .. " -out " .. temp_file) then
+        local output = vim_cmd_with_output(
+            "silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " ..
+            pass .. " -out " .. temp_file)
+        if not output then
             print("AES encryption failed")
             cleanup()
             return
         end
 
         -- XOR encryption stage
-        local output = vim_cmd_with_output("! xorc " ..
+        output = vim_cmd_with_output("! xorc " ..
             temp_file .. " " .. orig_file .. " --pad=" .. pad .. " --pos=" .. pos)
         if not output then
-            print("XOR encryption failed: '" .. output .. "'")
+            print("XOR encryption failed")
             cleanup()
             return
         end
@@ -222,22 +227,12 @@ return function()
         vim.opt.swapfile = false
         vim.opt.backup = false
 
-        local cleanup = function()
+        local cleanup_no_wipeout = function()
             -- Destroy the temp file
             local output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
             if not output then
-                print("Failed to remove temp file: '" .. output .. "'")
-                return
+                print("Failed to remove temp file")
             end
-
-            -- -- Edit the original file
-            -- if not vim_cmd("edit! " .. orig_file) then
-            --     print("Failed to return to the original file")
-            --     return
-            -- end
-
-            -- Wipeout the buffer
-            vim_cmd(":bwipeout " .. buf)
 
             -- Restore original options
             vim.opt.undofile = orig_opt_undofile
@@ -245,45 +240,70 @@ return function()
             vim.opt.backup = orig_opt_backup
         end
 
+        local cleanup_switch_to_orig_file = function()
+            cleanup_no_wipeout()
+
+            -- Edit the original file
+            if not vim_cmd_with_output("edit! " .. orig_file) then
+                print("Failed to edit original file")
+            end
+        end
+
+        local cleanup = function()
+            cleanup_no_wipeout()
+
+            -- Wipeout the buffer
+            if not vim_cmd_with_output(":bwipeout " .. buf) then
+                print("Failed to wipeout buffer")
+            end
+        end
+
         -- XOR decryption stage
         local output = vim_cmd_with_output("! xorc " ..
             orig_file .. " " .. temp_file .. " --pad=" .. pad .. " --pos=" .. pos)
         if not output then
-            print("XOR decryption failed: '" .. output .. "'")
-            cleanup()
+            print("XOR decryption failed")
+            cleanup_no_wipeout()
             return
         end
 
         -- Edit the temp file
-        if not vim_cmd("edit! " .. temp_file) then
+        if not vim_cmd_with_output("edit! " .. temp_file) then
             print("Failed to edit temp file")
-            cleanup()
+            cleanup_switch_to_orig_file()
             return;
         end
 
         buf = vim.api.nvim_get_current_buf()
 
-        -- AES decryption stage
-        if not vim_cmd("%delete") then
-            print("Failed to clear buffer")
-            cleanup()
-            return
-        end
-        if not vim_cmd("read! openssl enc -d -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " ..
-                pass .. " -in " .. temp_file) then
-            print("AES decryption failed")
-            cleanup()
-            return
-        end
-
         -- Prevent writing unencrypted data to disk
         vim.bo[buf].buftype = "nofile"
+
+        -- AES decryption stage
+        if not vim_cmd_with_output("%delete") then
+            print("Failed to clear buffer")
+            cleanup_switch_to_orig_file()
+            return
+        end
+        output = vim_cmd_with_output("read! openssl enc -d -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " ..
+            pass .. " -in " .. temp_file)
+        if not output then
+            print("AES decryption failed")
+            cleanup_switch_to_orig_file()
+            return
+        end
 
         -- Destroy the temp file
         output = vim_cmd_with_output("! shred -zun 3 " .. temp_file)
         if not output then
-            print("Failed to remove temp file: '" .. output .. "'")
+            print("Failed to remove temp file")
+            cleanup()
             return
+        end
+
+        -- Remove leading newline
+        if not vim_cmd_with_output("1,1s/\n//") then
+            print("Failed to remove leading newline")
         end
 
         local exited = false
@@ -300,7 +320,10 @@ return function()
             end
 
             -- AES encryption stage
-            if not vim_cmd("silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " .. pass .. " -out " .. temp_file) then
+            output = vim_cmd_with_output(
+                "silent write ! openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 1000000 -salt -k " ..
+                pass .. " -out " .. temp_file)
+            if not output then
                 print("AES encryption failed")
                 cleanup()
                 return
@@ -310,7 +333,7 @@ return function()
             output = vim_cmd_with_output("! xorc " ..
                 temp_file .. " " .. orig_file .. " --pad=" .. pad .. " --pos=" .. pos)
             if not output then
-                print("XOR encryption failed: '" .. output .. "'")
+                print("XOR encryption failed")
                 cleanup()
                 return
             end
@@ -329,8 +352,5 @@ return function()
             buffer = buf,
             callback = crypt_quit,
         })
-
-        -- Remove leading newline
-        vim.cmd("1,1s/\n//")
     end, { nargs = "*" })
 end
