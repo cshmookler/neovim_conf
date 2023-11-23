@@ -120,6 +120,7 @@ return function()
         if pad == "" then
             return
         end
+        pad = vim.fs.normalize(pad)
 
         local pos = vim.fn.inputsecret({ prompt = "Pos: " })
         if pos == "" then
