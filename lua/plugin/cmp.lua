@@ -8,7 +8,7 @@ return function()
     })
 
     local cmp = require("cmp")
-    local cmp_context = require("cmp.config.context")
+    -- local cmp_context = require("cmp.config.context")
     local luasnip = require("luasnip")
     luasnip.config.setup()
 
@@ -222,12 +222,12 @@ return function()
             filetypes = { "lua" },
             auto_start = true,
             before_init = require("neodev.lsp").before_init,
-            root_dir = vim.loop.cwd(),
+            root_dir = vim.fn.getcwd(),
             format = true,
             format_on_save = true,
             -- root_dir = vim.fs.dirname(vim.fs.find({
             --     ".git",
-            -- }, { upward = true })[1] or vim.loop.cwd()),
+            -- }, { upward = true })[1] or vim.fn.getcwd()),
             settings = {
                 Lua = {
                     completion = {
@@ -250,7 +250,7 @@ return function()
             cmd = { "clangd", --[[ "--header-insertion=never" --]] },
             filetypes = { "c", "cpp", "objc", "objcpp" },
             auto_start = true,
-            root_dir = vim.loop.cwd(),
+            root_dir = vim.fn.getcwd(),
             format = true,
             format_on_save = true,
             -- root_dir = vim.fs.dirname(vim.fs.find({
@@ -258,7 +258,7 @@ return function()
             --     ".clangd",
             --     ".clang-format",
             --     ".clang-tidy",
-            -- }, { upward = true })[1] or vim.loop.cwd()),
+            -- }, { upward = true })[1] or vim.fn.getcwd()),
             on_attach = on_attach,
             capabilities = capabilities,
         },
@@ -268,12 +268,12 @@ return function()
             cmd = { "Swift-MesonLSP", "--lsp" },
             filetypes = { "meson" },
             auto_start = true,
-            root_dir = vim.loop.cwd(),
+            root_dir = vim.fn.getcwd(),
             format = false,
             format_on_save = false,
             -- root_dir = vim.fs.dirname(vim.fs.find({
             --     ".git",
-            -- }, { upward = true })[1] or vim.loop.cwd()),
+            -- }, { upward = true })[1] or vim.fn.getcwd()),
             on_attach = function(client, bufnr)
                 on_attach(client, bufnr)
                 vim.api.nvim_create_autocmd("BufWritePost", {
@@ -289,7 +289,7 @@ return function()
             cmd = { "pyright-langserver", "--stdio" },
             filetypes = { "python" },
             auto_start = true,
-            root_dir = vim.loop.cwd(),
+            root_dir = vim.fn.getcwd(),
             format = false,
             format_on_save = false,
             settings = {
@@ -329,6 +329,30 @@ return function()
             format = true,
             format_on_save = true,
             on_attach = on_attach,
+            capabilities = capabilities,
+        },
+
+        ["bash-language-server"] = {
+            name = "bash-language-server",
+            cmd = {
+                "bash-language-server",
+                "start",
+            },
+            filetypes = { "sh" },
+            auto_start = true,
+            root_dir = vim.fn.getcwd(),
+            on_attach = function(client, bufnr)
+                on_attach(client, bufnr)
+                vim.api.nvim_create_autocmd("BufWritePost", {
+                    buffer = bufnr,
+                    callback = function()
+                        local view = vim.fn.winsaveview()
+                        vim.cmd("silent %! shfmt -i " .. vim.o.shiftwidth .. " %")
+                        ---@diagnostic disable-next-line: param-type-mismatch
+                        vim.fn.winrestview(view)
+                    end,
+                })
+            end,
             capabilities = capabilities,
         },
     }
