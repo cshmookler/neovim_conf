@@ -246,6 +246,9 @@ return function()
             vim.opt.undofile = orig_opt_undofile
             vim.opt.swapfile = orig_opt_swapfile
             vim.opt.backup = orig_opt_backup
+
+            -- Reset Zen mode mapping
+            nnoremap("<Leader>f", ":ZenMode<CR>", "Toggle zen mode")
         end
 
         local cleanup_switch_to_orig_file = function()
@@ -265,6 +268,11 @@ return function()
                 print("Failed to wipeout buffer")
             end
         end
+
+        -- Modify zen mode to include "blinder mode"
+        nnoremap("<Leader>f",
+            ":ZenMode<CR>:lua vim.api.nvim_open_win(vim.api.nvim_create_buf({}, {}), 1, { relative='editor', width=50, height=10, col=10, row=10, focusable=false, style='minimal'})<CR>",
+            "Toggle zen mode")
 
         -- XOR decryption stage
         local output = vim_cmd_with_output("! xorc " ..

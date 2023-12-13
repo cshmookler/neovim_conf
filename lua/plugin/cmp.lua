@@ -157,7 +157,7 @@ return function()
     })
     dictionary.switcher({
         spelllang = {
-            en = "~/.config/aspell-en/en.dict",
+            en = "/etc/xdg/nvim/en.dict",
         },
     })
 
@@ -343,15 +343,15 @@ return function()
             root_dir = vim.fn.getcwd(),
             on_attach = function(client, bufnr)
                 on_attach(client, bufnr)
-                vim.api.nvim_create_autocmd("BufWritePost", {
-                    buffer = bufnr,
-                    callback = function()
-                        local view = vim.fn.winsaveview()
-                        vim.cmd("silent %! shfmt -i " .. vim.o.shiftwidth .. " %")
-                        ---@diagnostic disable-next-line: param-type-mismatch
-                        vim.fn.winrestview(view)
-                    end,
-                })
+                -- vim.api.nvim_create_autocmd("BufWritePost", {
+                --     buffer = bufnr,
+                --     callback = function()
+                --         local view = vim.fn.winsaveview()
+                --         vim.cmd("silent %! shfmt -i " .. vim.o.shiftwidth .. " %")
+                --         ---@diagnostic disable-next-line: param-type-mismatch
+                --         vim.fn.winrestview(view)
+                --     end,
+                -- })
             end,
             capabilities = capabilities,
         },
