@@ -57,10 +57,12 @@ return function()
         sources = {
             {
                 name = "nvim_lsp_signature_help",
+                max_item_count = 15,
             },
             {
                 name = "nvim_lsp",
                 keyword_length = 2,
+                max_item_count = 10,
                 entry_filter = function(entry, _)
                     return cmp.lsp.CompletionItemKind.Text ~= entry:get_kind()
                 end,
@@ -68,21 +70,22 @@ return function()
             {
                 name = "luasnip",
                 keyword_length = 2,
+                max_item_count = 1,
             },
             {
                 name = "buffer",
                 keyword_length = 2,
-                max_item_count = 5,
+                max_item_count = 3,
             },
             {
                 name = "calc",
                 keyword_length = 1,
-                max_item_count = 5,
+                max_item_count = 2,
             },
             {
                 name = "emoji",
                 keyword_length = 1,
-                max_item_count = 5,
+                max_item_count = 10,
             },
             {
                 name = "dictionary",
@@ -130,8 +133,14 @@ return function()
     cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-            { name = "nvim_lsp_document_symbol" },
-            { name = "buffer" },
+            {
+                name = "nvim_lsp_document_symbol",
+                max_item_count = 10,
+            },
+            {
+                name = "buffer",
+                max_item_count = 5,
+            },
         }),
     })
 
@@ -139,8 +148,14 @@ return function()
     cmp.setup.cmdline({ ":" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-            { name = "path" },
-            { name = "cmdline" },
+            {
+                name = "path",
+                max_item_count = 10,
+            },
+            {
+                name = "cmdline",
+                max_item_count = 10,
+            },
         })
     })
 
