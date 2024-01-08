@@ -25,5 +25,5 @@ nvim
 ## **TODO**
 
 - [ ] Create a pacman package for this configuration.
-- [ ] Adapt inlay hints to work with Clang 16+.
+- [X] Adapt inlay hints to work with neovim 0.10.0+.
 - [ ] Alter SudoWrite to prompt for the sudo password when necessary.
