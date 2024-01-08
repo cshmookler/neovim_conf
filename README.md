@@ -21,3 +21,9 @@ nvim
 ```vim
 :checkhealth
 ```
+
+## **TODO**
+
+- [ ] Create a pacman package for this configuration.
+- [ ] Adapt inlay hints to work with Clang 16+.
+- [ ] Alter SudoWrite to prompt for the sudo password when necessary.
