@@ -200,7 +200,7 @@ return function()
 
         if client.server_capabilities.inlayHintProvider then
             -- Inlay hints
-            vim.lsp.inlay_hint(bufnr, true)
+            vim.lsp.inlay_hint.enable(bufnr, true)
         end
 
         if lsp[client.name].format and client.server_capabilities.documentOnTypeFormattingProvider then
