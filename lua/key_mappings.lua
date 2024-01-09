@@ -10,11 +10,12 @@ return function()
     nnoremap("u", "u", "Undo")
     nnoremap("U", "<C-r>", "Redo")
 
-    -- Quickly move between panes
+    -- Quickly move between and manipulate panes
     nnoremap("<C-h>", "<C-w>h", "Go to the left window")
     nnoremap("<C-j>", "<C-w>j", "Go to the down window")
     nnoremap("<C-k>", "<C-w>k", "Go to the up window")
     nnoremap("<C-l>", "<C-w>l", "Go to the right window")
+    nnoremap("<C-x>", "<C-w>x", "Swap with the next window")
 
     -- Quick buffer management
     nnoremap("<Leader>q", ":q<CR>", "Quit")
