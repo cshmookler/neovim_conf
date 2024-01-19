@@ -1,4 +1,7 @@
 return function()
+    -- Custom global variables
+    vim.g._format_on_save    = true
+
     -- Leader key
     vim.g.mapleader          = " " -- Set global mapping for <Leader>.
     vim.g.maplocalleader     = " " -- Set local mapping for <Leader>.

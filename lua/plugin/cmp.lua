@@ -208,10 +208,21 @@ return function()
             vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
                 vim.lsp.buf.format()
             end, {})
+            vim.api.nvim_buf_create_user_command(bufnr, "FormatOnSaveEnable", function()
+                vim.g._format_on_save = true
+                print("true")
+            end, {})
+            vim.api.nvim_buf_create_user_command(bufnr, "FormatOnSaveDisable", function()
+                vim.g._format_on_save = false
+                print("false")
+            end, {})
             if lsp[client.name].format_on_save then
                 vim.api.nvim_create_autocmd("BufWritePre", {
                     buffer = bufnr,
                     callback = function()
+                        if not vim.g._format_on_save then
+                            return
+                        end
                         local view = vim.fn.winsaveview()
                         vim.lsp.buf.format({ bufnr = bufnr })
                         ---@diagnostic disable-next-line: param-type-mismatch
