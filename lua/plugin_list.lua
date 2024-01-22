@@ -123,9 +123,5 @@ return function()
             config = require("plugin.yanky"),
         },
 
-        {
-            "tpope/vim-eunuch",
-        },
-
     })
 end

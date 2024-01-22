@@ -1,11 +1,14 @@
--- Set Neovim options.
+-- Set Neovim options
 require("options")()
 
--- Install required programs (if not already installed).
+-- Install required programs (if not already installed)
 require("bootstrap")()
 
--- Install plugins (if not already installed).
+-- Install plugins (if not already installed)
 require("plugin_list")()
 
--- Key mappings.
+-- Key mappings
 require("key_mappings")()
+
+-- Commands
+require("commands")()
