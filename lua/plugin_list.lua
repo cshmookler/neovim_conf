@@ -123,5 +123,11 @@ return function()
             config = require("plugin.yanky"),
         },
 
+        {
+            "folke/todo-comments.nvim",
+            dependencies = { "nvim-lua/plenary.nvim" },
+            config = require("plugin.todo-comments"),
+        },
+
     })
 end
