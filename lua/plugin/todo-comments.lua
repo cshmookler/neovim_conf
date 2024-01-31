@@ -13,10 +13,10 @@ return function()
             },
             TODO = { icon = " ", color = "info" },
             HACK = { icon = " ", color = "warning" },
-            WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+            WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
             PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-            NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-            TEST = { icon = "󱎫 ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+            NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+            TEST = { icon = "󰔛 ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
         },
         gui_style = {
             fg = "BOLD",       -- The gui style to use for the fg highlight group.
