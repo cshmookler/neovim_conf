@@ -25,6 +25,7 @@ return function()
                 "saadparwaiz1/cmp_luasnip",
                 "rafamadriz/friendly-snippets",
                 "hrsh7th/cmp-emoji",
+                "chrisgrieser/cmp-nerdfont",
                 "folke/neodev.nvim",
                 { "j-hui/fidget.nvim", tag = "legacy" },
                 "mfussenegger/nvim-jdtls",

@@ -53,7 +53,7 @@ return function()
                 nvim_tree_api.tree.reload()
             end, bufnr, "Reload tree")
 
-            nbufnoremap("Y", function()
+            nbufnoremap("i", function()
                 nvim_tree_api.node.show_info_popup()
             end, bufnr, "Show info popup")
 
@@ -72,6 +72,14 @@ return function()
             nbufnoremap("a", function()
                 nvim_tree_api.fs.create()
             end, bufnr, "Create new file or directory")
+
+            nbufnoremap("c", function()
+                nvim_tree_api.fs.copy.node()
+            end, bufnr, "Copy a file or directory")
+
+            nbufnoremap("p", function()
+                nvim_tree_api.fs.paste()
+            end, bufnr, "Paste a copied file or directory")
         end,
 
         hijack_cursor = false,

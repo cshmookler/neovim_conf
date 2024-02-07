@@ -3,7 +3,7 @@ return function()
         virtual_text = false,
         virtual_lines = {
             highlight_while_line = false,
-            only_current_line = true,
+            only_current_line = false,
         },
     })
 
@@ -45,6 +45,7 @@ return function()
                     luasnip = "Snippet",
                     calc = "Calc",
                     emoji = "Emoji",
+                    nerdfont = "Nerd Font Icon",
                     buffer = "Buffer",
                     dictionary = "Dictionary",
                 }
@@ -57,11 +58,12 @@ return function()
         sources = {
             {
                 name = "nvim_lsp_signature_help",
+                keyword_length = 1,
                 max_item_count = 15,
             },
             {
                 name = "nvim_lsp",
-                keyword_length = 2,
+                keyword_length = 1,
                 max_item_count = 10,
                 entry_filter = function(entry, _)
                     return cmp.lsp.CompletionItemKind.Text ~= entry:get_kind()
@@ -88,6 +90,11 @@ return function()
                 max_item_count = 10,
             },
             {
+                name = "nerdfont",
+                keyword_length = 1,
+                max_item_count = 10,
+            },
+            {
                 name = "dictionary",
                 keyword_length = 2,
                 max_item_count = 5,
@@ -108,7 +115,7 @@ return function()
                     cmp.complete()
                 end
             end, { "i", "s" }),
-            ["<Tab>"] = cmp.mapping(function(fallback)
+            ["<C-n>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
                 elseif luasnip.expand_or_locally_jumpable() then
@@ -117,7 +124,7 @@ return function()
                     fallback()
                 end
             end, { "i", "s" }),
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
+            ["<C-p>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
                 elseif luasnip.locally_jumpable(-1) then
