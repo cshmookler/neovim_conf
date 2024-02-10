@@ -198,8 +198,8 @@ return function()
         nnoremap("gt", vim.lsp.buf.type_definition, "Goto type defition")
         nnoremap("gI", vim.lsp.buf.implementation, "Goto implementation")
         nnoremap("gr", vim.lsp.buf.references, "Goto references")
-        nnoremap("<Leader>rn", vim.lsp.buf.rename, "Rename")
-        nnoremap("<Leader>ca", ":CodeActionMenu<CR>", "Code action") -- vim.lsp.buf.code_action
+        nnoremap("<Leader>r", vim.lsp.buf.rename, "Rename")
+        nnoremap("<Leader>c", ":CodeActionMenu<CR>", "Code action") -- vim.lsp.buf.code_action
         nnoremap("Y", vim.lsp.buf.hover, "Hover")
 
         -- Treesitter highlighting
