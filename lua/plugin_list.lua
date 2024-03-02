@@ -130,5 +130,9 @@ return function()
             config = require("plugin.todo-comments"),
         },
 
+        {
+            "kkoomen/vim-doge",
+            run = ":call doge#install()",
+        },
     })
 end

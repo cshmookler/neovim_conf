@@ -1,9 +1,14 @@
 return function()
     require("util.keymap")
+
+    -- Move by visual lines instead of actual lines.
+    nvnoremap("j", "gj", "Move down by visual line")
+    nvnoremap("k", "gk", "Move up by one visual line")
+
     -- Fast vertical movement
     nvnoremap("H", "3b", "Three words left")
-    nvnoremap("J", "3j", "Three lines down")
-    nvnoremap("K", "3k", "Three lines up")
+    nvnoremap("J", "3gj", "Three visual lines down")
+    nvnoremap("K", "3gk", "Three visual lines up")
     nvnoremap("L", "3w", "Three words right")
 
     -- More intuitive undo and redo
@@ -24,9 +29,9 @@ return function()
     nnoremap("<Leader>W", ":wa<CR>", "Write all")
 
     -- Quick tab management
-    nnoremap("<C-p>", vim.cmd.tabnext, "Next tab")
+    nnoremap("<C-m>", vim.cmd.tabnext, "Next tab")
     nnoremap("<C-n>", vim.cmd.tabprev, "Previous tab")
-    nnoremap("<C-i>", function()
+    nnoremap("<C-b>", function()
         vim.cmd.tabnew()
         vim.cmd("NvimTreeOpen")
         -- require("nvim-tree.api").tree.focus()
@@ -42,13 +47,6 @@ return function()
     tnoremap("<C-l>", "<C-\\><C-n><C-w>l", "Go to the right window")
     tnoremap("<C-d>", "<C-\\><C-n>:close<CR>", "Close terminal")
     tnoremap("<C-r>", "<C-\\><C-n>:terminal<CR>A", "Refresh terminal")
-    tnoremap("<C-E>", "<C-e>", "Send <C-e> to the terminal")
-    tnoremap("<C-H>", "<C-h>", "Send <C-h> to the terminal")
-    tnoremap("<C-J>", "<C-j>", "Send <C-j> to the terminal")
-    tnoremap("<C-K>", "<C-k>", "Send <C-k> to the terminal")
-    tnoremap("<C-L>", "<C-l>", "Send <C-l> to the terminal")
-    tnoremap("<C-D>", "<C-d>", "Send <C-d> to the terminal")
-    tnoremap("<C-R>", "<C-r>", "Send <C-r> to the terminal")
 
     -- NvimTree key mappings
     local nvim_tree_api = require("nvim-tree.api")
@@ -61,7 +59,7 @@ return function()
     xnoremap_prompt("<Leader>re", ":Refactor extract ", "Extract")
     xnoremap_prompt("<Leader>rf", ":Refactor extract_to_file ", "Extract to file")
     xnoremap_prompt("<Leader>rv", ":Refactor extract_var ", "Extract variable")
-    noremap_prompt({ "n", "x" }, "<leader>ri", ":Refactor inline_var", "Inline variable")
+    noremap_prompt({ "n", "x" }, "<Leader>ri", ":Refactor inline_var", "Inline variable")
     nnoremap_prompt("<Leader>rI", ":Refactor inline_func", "Inline function")
     nnoremap_prompt("<Leader>rb", ":Refactor extract_block", "Extract block")
     nnoremap_prompt("<Leader>rbf", ":Refactor extract_block_to_file", "Extract block to file")
@@ -87,4 +85,10 @@ return function()
     nnoremap("<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
     nnoremap("=p", "<Plug>(YankyPutAfterFilter)")
     nnoremap("=P", "<Plug>(YankyPutBeforeFilter)")
+
+    -- Documentation generator (Doge)
+    vim.g.doge_enable_mappings = 0;
+    nnoremap("<Leader>d", "<Plug>(doge-generate)", "Doc gen")
+    noremap({ "n", "i", "x" }, "<Tab>", "<Plug>(doge-comment-jump-forward)", "Doc next field")
+    noremap({ "n", "i", "x" }, "<S-Tab>", "<Plug>(doge-comment-jump-backward)", "Doc previous field")
 end

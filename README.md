@@ -12,18 +12,14 @@ This is my personal Neovim configuration. It includes syntax highlighting, autoc
 git clone https://github.com/cshmookler/config.nvim ~/.config/nvim
 ```
 
-**3.** Start NeoVim. Once all plugins are installed, press 'q' and enter ':checkhealth'.
+**3.** Start NeoVim. All plugins will automatically download and install.
 
 ```bash
 nvim
 ```
 
+**4.** Once all plugins are installed, press 'q' to exit the plugin installation window and enter ':checkhealth'.
+
 ```vim
 :checkhealth
 ```
-
-## **TODO**
-
-- [ ] Create a pacman package for this configuration.
-- [X] Adapt inlay hints to work with neovim 0.10.0+.
-- [ ] Alter SudoWrite to prompt for the sudo password when necessary.

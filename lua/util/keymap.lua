@@ -41,6 +41,14 @@ xnoremap_prompt = function(lhs, rhs, desc)
     noremap_prompt("x", lhs, rhs, desc)
 end
 
+inoremap = function(lhs, rhs, desc)
+    noremap("i", lhs, rhs, desc)
+end
+
+xnoremap = function(lhs, rhs, desc)
+    noremap("x", lhs, rhs, desc)
+end
+
 isnoremap = function(lhs, rhs, desc)
     noremap({ "i", "s" }, lhs, rhs, desc)
 end

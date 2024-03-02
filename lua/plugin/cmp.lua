@@ -251,6 +251,7 @@ return function()
 
         ["lua-language-server"] = {
             name = "lua-language-server",
+            lang = "lua",
             cmd = { "lua-language-server" },
             filetypes = { "lua" },
             auto_start = true,
@@ -280,6 +281,7 @@ return function()
 
         ["clangd"] = {
             name = "clangd",
+            lang = "cpp",
             cmd = { "clangd", --[[ "--header-insertion=never" --]] },
             filetypes = { "c", "cpp", "objc", "objcpp" },
             auto_start = true,
@@ -298,6 +300,7 @@ return function()
 
         ["Swift-MesonLSP"] = {
             name = "Swift-MesonLSP",
+            lang = "meson",
             cmd = { "Swift-MesonLSP", "--lsp" },
             filetypes = { "meson" },
             auto_start = true,
@@ -319,6 +322,7 @@ return function()
 
         ["pyright"] = {
             name = "pyright",
+            lang = "python",
             cmd = { "pyright-langserver", "--stdio" },
             filetypes = { "python" },
             auto_start = true,
@@ -346,6 +350,7 @@ return function()
 
         ["jdtls"] = {
             name = "jdtls",
+            lang = "java",
             cmd = {
                 "jdtls",
                 "-configuration",
@@ -367,6 +372,7 @@ return function()
 
         ["bash-language-server"] = {
             name = "bash-language-server",
+            lang = "bash",
             cmd = {
                 "bash-language-server",
                 "start",
@@ -394,25 +400,30 @@ return function()
         if not config.auto_start then
             goto continue
         end
+        local start_or_attach = function()
+            local client = vim.lsp.start(config)
+            if not client then
+                return
+            end
+            vim.lsp.buf_attach_client(0, client)
+        end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = config.filetypes,
-            callback = function()
-                local client = vim.lsp.start(config)
-                if not client then
-                    return
-                end
-                vim.lsp.buf_attach_client(0, client)
-            end,
+            callback = start_or_attach,
         })
+        vim.api.nvim_create_user_command("LspStart" .. config.lang, start_or_attach, {})
         ::continue::
+    end
+
+    local start_or_attach_jdtls = function()
+        require("jdtls").start_or_attach(lsp["jdtls"])
     end
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = lsp["jdtls"].filetypes,
-        callback = function()
-            require("jdtls").start_or_attach(lsp["jdtls"])
-        end,
+        callback = start_or_attach_jdtls,
     })
+    vim.api.nvim_create_user_command("LspStart" .. lsp["jdtls"].lang, start_or_attach_jdtls, {})
 
     local fidget = require("fidget")
     fidget.setup()
