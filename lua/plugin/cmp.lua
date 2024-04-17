@@ -74,11 +74,11 @@ return function()
                 keyword_length = 2,
                 max_item_count = 1,
             },
-            {
-                name = "buffer",
-                keyword_length = 2,
-                max_item_count = 3,
-            },
+            -- {
+            --     name = "buffer",
+            --     keyword_length = 2,
+            --     max_item_count = 3,
+            -- },
             {
                 name = "calc",
                 keyword_length = 1,
@@ -144,10 +144,10 @@ return function()
                 name = "nvim_lsp_document_symbol",
                 max_item_count = 10,
             },
-            {
-                name = "buffer",
-                max_item_count = 5,
-            },
+            -- {
+            --     name = "buffer",
+            --     max_item_count = 5,
+            -- },
         }),
     })
 
@@ -217,11 +217,11 @@ return function()
             end, {})
             vim.api.nvim_buf_create_user_command(bufnr, "FormatOnSaveEnable", function()
                 vim.g._format_on_save = true
-                print("true")
+                print("enabled")
             end, {})
             vim.api.nvim_buf_create_user_command(bufnr, "FormatOnSaveDisable", function()
                 vim.g._format_on_save = false
-                print("false")
+                print("disabled")
             end, {})
             if lsp[client.name].format_on_save then
                 vim.api.nvim_create_autocmd("BufWritePre", {

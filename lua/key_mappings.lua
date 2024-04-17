@@ -29,13 +29,9 @@ return function()
     nnoremap("<Leader>W", ":wa<CR>", "Write all")
 
     -- Quick tab management
-    nnoremap("<C-m>", vim.cmd.tabnext, "Next tab")
-    nnoremap("<C-n>", vim.cmd.tabprev, "Previous tab")
-    nnoremap("<C-b>", function()
-        vim.cmd.tabnew()
-        vim.cmd("NvimTreeOpen")
-        -- require("nvim-tree.api").tree.focus()
-    end, "Open new tab")
+    nnoremap("<C-f>", ":tabnext<CR>", "Next tab")
+    nnoremap("<C-s>", ":tabprevious<CR>", "Previous tab")
+    nnoremap("<C-b>", ":tabnew<CR>:NvimTreeOpen<CR>", "Open new tab")
 
     -- Integrated terminal
     nnoremap("<Leader>t", ":split<CR>:terminal<CR>A", "Open horizontal terminal")
@@ -47,6 +43,9 @@ return function()
     tnoremap("<C-l>", "<C-\\><C-n><C-w>l", "Go to the right window")
     tnoremap("<C-d>", "<C-\\><C-n>:close<CR>", "Close terminal")
     tnoremap("<C-r>", "<C-\\><C-n>:terminal<CR>A", "Refresh terminal")
+    tnoremap("<C-f>", "<C-\\><C-n>:tabnext<CR>", "Next tab")
+    tnoremap("<C-s>", "<C-\\><C-n>:tabprevious<CR>", "Previous tab")
+    tnoremap("<C-b>", "<C-\\><C-n>:tabnew<CR>:NvimTreeOpen<CR>", "Open new tab")
 
     -- NvimTree key mappings
     local nvim_tree_api = require("nvim-tree.api")
