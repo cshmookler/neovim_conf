@@ -59,6 +59,12 @@ return function()
         end
     end, {})
 
+    -- Spell checker
+    vim.api.nvim_create_user_command("SpellCheck", "term set modifiable ; aspell --lang=en_US check %", {})
+
+    -- Automatically close the finished process (spell checker) when it exits
+    vim.api.nvim_create_autocmd({ "TermClose" }, { pattern = "*", command = "execute 'bdelete! ' . expand('<abuf>')" })
+
     -- Get input for the generating and cracking encrypted files
     local get_crypt_info = function()
         local pad = vim.fn.inputsecret({ prompt = "Pad: " })
