@@ -42,6 +42,8 @@ return function()
 
         {
             "akinsho/bufferline.nvim",
+            version = "*",
+            dependencies = "nvim-tree/nvim-web-devicons",
             config = require("plugin.bufferline"),
         },
 
@@ -100,6 +102,8 @@ return function()
             "nvim-treesitter/nvim-treesitter",
             dependencies = {
                 "nvim-treesitter/nvim-treesitter-textobjects",
+                "nvim-treesitter/nvim-treesitter-context",
+                "nvim-treesitter/nvim-treesitter-refactor",
             },
             build = "TSUpdate",
             config = require("plugin.treesitter"),

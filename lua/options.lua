@@ -31,7 +31,7 @@ return function()
     -- vim.opt.textwidth        = 80 -- Automatically wrap words past a certain column.
 
     -- UI
-    vim.opt.termguicolors    = false                                -- 24-bit RGB color support.
+    vim.opt.termguicolors    = true                                 -- 24-bit RGB color support.
     vim.opt.background       = "dark"                               -- Set the default background.
     vim.opt.cmdheight        = 1                                    -- Number of lines given to the command line.
     vim.opt.number           = true                                 -- Show line numbers.

@@ -168,19 +168,12 @@ return function()
 
     local dictionary = require("cmp_dictionary")
     dictionary.setup({
-        exact = 2,
+        paths = { "/etc/xdg/nvim/en.dict" },
+        exact_length = 2,
         first_case_insensitive = false,
-        document = false,
-        document_command = "wn %s -over",
-        sqlite = false,
-        max_items = -1,
-        capacity = 5,
-        debug = false,
-    })
-    dictionary.switcher({
-        spelllang = {
-            en = "/etc/xdg/nvim/en.dict",
-        },
+        max_number_items = 5,
+        document = { false, command = {} },
+        external = { false, command = {} },
     })
 
     require("util.keymap")

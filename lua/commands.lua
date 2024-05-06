@@ -60,7 +60,7 @@ return function()
     end, {})
 
     -- Spell checker
-    vim.api.nvim_create_user_command("SpellCheck", "term set modifiable ; aspell --lang=en_US check %", {})
+    vim.api.nvim_create_user_command("SpellCheck", "term set modifiable ; aspell --lang=en_US --dont-backup check %", {})
 
     -- Automatically close the finished process (spell checker) when it exits
     vim.api.nvim_create_autocmd({ "TermClose" }, { pattern = "*", command = "execute 'bdelete! ' . expand('<abuf>')" })
