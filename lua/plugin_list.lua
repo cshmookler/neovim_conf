@@ -138,5 +138,6 @@ return function()
             "kkoomen/vim-doge",
             run = ":call doge#install()",
         },
+
     })
 end

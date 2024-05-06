@@ -23,7 +23,36 @@ return function()
     nnoremap("<C-x>", "<C-w>x", "Swap with the next window")
 
     -- Quick buffer management
-    nnoremap("<Leader>q", ":q<CR>", "Quit")
+    nnoremap("<Leader>q", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local buf_windows = vim.call("win_findbuf", bufnr)
+        local modified = vim.api.nvim_get_option_value("modified", { buf = bufnr })
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if modified and #buf_windows == 1 then
+            vim.ui.input({
+                prompt = "Save unwritten changes to " .. name .. "?\n[Y]es, (N)o, (C)ancel: ",
+            }, function(input)
+                if input == "c" or input == "C" then
+                    return
+                end
+
+                if input == "n" or input == "N" then
+                    vim.cmd("q!")
+                    return
+                end
+
+                if name == "" then
+                    print("Error: No file name")
+                    return
+                end
+
+                vim.cmd("wq")
+            end)
+        else
+            vim.cmd("q")
+        end
+    end, "Quit")
     nnoremap("<Leader>Q", ":qa<CR>", "Quit all")
     nnoremap("<Leader>w", ":w<CR>", "Write")
     nnoremap("<Leader>W", ":wa<CR>", "Write all")
@@ -41,7 +70,7 @@ return function()
     tnoremap("<C-j>", "<C-\\><C-n><C-w>j", "Go to the down window")
     tnoremap("<C-k>", "<C-\\><C-n><C-w>k", "Go to the up window")
     tnoremap("<C-l>", "<C-\\><C-n><C-w>l", "Go to the right window")
-    tnoremap("<C-d>", "<C-\\><C-n>:close<CR>", "Close terminal")
+    tnoremap("<C-d>", "<C-\\><C-n>:quit<CR>", "Close terminal")
     tnoremap("<C-r>", "<C-\\><C-n>:terminal<CR>A", "Refresh terminal")
     tnoremap("<C-f>", "<C-\\><C-n>:tabnext<CR>", "Next tab")
     tnoremap("<C-s>", "<C-\\><C-n>:tabprevious<CR>", "Previous tab")

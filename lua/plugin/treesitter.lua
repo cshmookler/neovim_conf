@@ -1,6 +1,7 @@
 return function()
     vim.defer_fn(function()
         local treesitter = require("nvim-treesitter.configs")
+        ---@diagnostic disable-next-line: missing-fields
         treesitter.setup({
             ensure_installed = { "bash", "c", "cpp", "lua", "meson", "python", "rust", "javascript", "typescript", "vim",
                 "vimdoc" },
