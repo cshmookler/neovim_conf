@@ -65,21 +65,13 @@ return function()
     -- Integrated terminal
     local create_terminal = function(split_command, back_to_buffer_command)
         local bufnr = vim.api.nvim_get_current_buf()
-        ---@diagnostic disable-next-line: param-type-mismatch
+        local modified = vim.api.nvim_get_option_value("modified", { buf = bufnr })
         local name = vim.api.nvim_buf_get_name(bufnr)
         vim.cmd(split_command)
         vim.cmd("terminal")
-        if name == "" then
-            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-            local total_characters = 0
-            for _, line in ipairs(lines) do
-                total_characters = total_characters + #line
-            end
-
-            if total_characters == 0 then
-                vim.cmd(back_to_buffer_command)
-                vim.cmd("quit")
-            end
+        if name == "" and not modified then
+            vim.cmd(back_to_buffer_command)
+            vim.cmd("quit")
         end
         vim.cmd("startinsert")
     end

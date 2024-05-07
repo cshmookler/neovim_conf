@@ -7,6 +7,9 @@ return function()
         },
     })
 
+    local dictionary = require("cmp_dictionary")
+    dictionary.setup({ paths = { "/etc/xdg/nvim/en.dict" } })
+
     local cmp = require("cmp")
     -- local cmp_context = require("cmp.config.context")
     local luasnip = require("luasnip")
@@ -98,9 +101,6 @@ return function()
                 name = "dictionary",
                 keyword_length = 2,
                 max_item_count = 5,
-                -- entry_filter = function(_, _)
-                --     return cmp_context.in_syntax_group("Comment") or cmp_context.in_treesitter_capture("comment")
-                -- end,
             },
         },
 
@@ -164,16 +164,6 @@ return function()
                 max_item_count = 10,
             },
         })
-    })
-
-    local dictionary = require("cmp_dictionary")
-    dictionary.setup({
-        paths = { "/etc/xdg/nvim/en.dict" },
-        exact_length = 2,
-        first_case_insensitive = false,
-        max_number_items = 5,
-        document = { false, command = {} },
-        external = { false, command = {} },
     })
 
     require("util.keymap")
