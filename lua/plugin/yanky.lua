@@ -23,8 +23,8 @@ return function()
             sync_with_ring = true,
         },
         highlight = {
-            on_put = true,
-            on_yank = true,
+            on_put = false,
+            on_yank = false,
             timer = 500,
         },
         preserve_cursor_position = {
