@@ -25,33 +25,33 @@ return function()
     -- Quick buffer management
     nnoremap("<Leader>q", function()
         local bufnr = vim.api.nvim_get_current_buf()
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local buf_windows = vim.call("win_findbuf", bufnr)
         local modified = vim.api.nvim_get_option_value("modified", { buf = bufnr })
         local name = vim.api.nvim_buf_get_name(bufnr)
-        if modified and #buf_windows == 1 then
-            vim.ui.input({
-                prompt = "Save unwritten changes to " .. name .. "?\n[Y]es, (N)o, (C)ancel: ",
-            }, function(input)
-                if input == "c" or input == "C" then
-                    return
-                end
 
-                if input == "n" or input == "N" then
-                    vim.cmd("q!")
-                    return
-                end
-
-                if name == "" then
-                    print("Error: No file name")
-                    return
-                end
-
-                vim.cmd("wq")
-            end)
-        else
+        if not modified then
             vim.cmd("q")
+            return
         end
+
+        vim.ui.input({
+            prompt = "Save unwritten changes to " .. name .. "?\n[Y]es, (N)o, (C)ancel: ",
+        }, function(input)
+            if input == "c" or input == "C" then
+                return
+            end
+
+            if input == "n" or input == "N" then
+                vim.cmd("q!")
+                return
+            end
+
+            if name == "" then
+                print("Error: No file name")
+                return
+            end
+
+            vim.cmd("wq")
+        end)
     end, "Quit")
     nnoremap("<Leader>Q", ":qa<CR>", "Quit all")
     nnoremap("<Leader>w", ":w<CR>", "Write")
@@ -63,8 +63,34 @@ return function()
     nnoremap("<C-b>", ":tabnew<CR>:NvimTreeOpen<CR>", "Open new tab")
 
     -- Integrated terminal
-    nnoremap("<Leader>t", ":split<CR>:terminal<CR>A", "Open horizontal terminal")
-    nnoremap("<Leader>T", ":vsplit<CR>:terminal<CR>A", "Open vertical terminal")
+    local create_terminal = function(split_command, back_to_buffer_command)
+        local bufnr = vim.api.nvim_get_current_buf()
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        vim.cmd(split_command)
+        vim.cmd("terminal")
+        if name == "" then
+            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+            local total_characters = 0
+            for _, line in ipairs(lines) do
+                total_characters = total_characters + #line
+            end
+
+            if total_characters == 0 then
+                vim.cmd(back_to_buffer_command)
+                vim.cmd("quit")
+            end
+        end
+        vim.cmd("startinsert")
+    end
+    local create_horizontal_terminal = function()
+        create_terminal("split", "wincmd k")
+    end
+    local create_vertical_terminal = function()
+        create_terminal("vsplit", "wincmd h")
+    end
+    nnoremap("<Leader>t", create_horizontal_terminal, "Open horizontal terminal")
+    nnoremap("<Leader>T", create_vertical_terminal, "Open vertical terminal")
     tnoremap("<C-e>", "<C-\\><C-n>", "Exit terminal mode")
     tnoremap("<C-h>", "<C-\\><C-n><C-w>h", "Go to the left window")
     tnoremap("<C-j>", "<C-\\><C-n><C-w>j", "Go to the down window")
