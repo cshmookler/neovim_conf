@@ -162,7 +162,10 @@ return function()
     })
 
     local dictionary = require("cmp_dictionary")
-    dictionary.setup({ paths = { "/etc/xdg/nvim/en.dict" } })
+    dictionary.setup({
+        paths = { "/etc/xdg/nvim/en.dict" },
+        first_case_insensitive = true,
+    })
 
     require("util.keymap")
 
