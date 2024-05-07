@@ -1,5 +1,6 @@
 return function()
     require("util.keymap")
+
     local tree = require("nvim-tree")
     tree.setup({
 
@@ -17,12 +18,12 @@ return function()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in vertical split")
 
-            nbufnoremap("<C-n>", function()
+            nbufnoremap("<C-s>", function()
                 vim.cmd.tabprevious()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Goto previous tab")
 
-            nbufnoremap("<C-m>", function()
+            nbufnoremap("<C-f>", function()
                 vim.cmd.tabnext()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Goto next tab")
@@ -57,15 +58,9 @@ return function()
                 nvim_tree_api.node.show_info_popup()
             end, bufnr, "Show info popup")
 
-            nbufnoremap("d", function()
-                nvim_tree_api.fs.trash()
-            end, bufnr, "Remove a file or directory")
-
-            nbufnoremap("D", function()
-                nvim_tree_api.fs.remove()
-            end, bufnr, "Delete a file or directory")
-
             nbufnoremap("r", function()
+                nvim_tree_api.marks.toggle()
+                nvim_tree_api.fs.copy.node()
                 nvim_tree_api.fs.rename()
             end, bufnr, "Rename file or directory")
 
@@ -74,12 +69,40 @@ return function()
             end, bufnr, "Create new file or directory")
 
             nbufnoremap("c", function()
+                nvim_tree_api.marks.toggle()
                 nvim_tree_api.fs.copy.node()
-            end, bufnr, "Copy a file or directory")
+            end, bufnr, "Select a file or directory")
 
             nbufnoremap("p", function()
                 nvim_tree_api.fs.paste()
-            end, bufnr, "Paste a copied file or directory")
+                nvim_tree_api.marks.clear()
+            end, bufnr, "Copy selected files or directories to another directory")
+
+            nbufnoremap("m", function()
+                nvim_tree_api.marks.bulk.move()
+                nvim_tree_api.fs.clear_clipboard()
+            end, bufnr, "Move selected files or directories to another directory")
+
+            nbufnoremap("d", function()
+                if #nvim_tree_api.marks.list() == 0 then
+                    nvim_tree_api.fs.trash()
+                else
+                    nvim_tree_api.marks.bulk.trash()
+                end
+            end, bufnr, "Trash selected files or directories")
+
+            nbufnoremap("D", function()
+                if #nvim_tree_api.marks.list() == 0 then
+                    nvim_tree_api.fs.remove()
+                else
+                    nvim_tree_api.marks.bulk.delete()
+                end
+            end, bufnr, "Delete selected files or directories")
+
+            nbufnoremap("x", function()
+                nvim_tree_api.marks.clear()
+                nvim_tree_api.fs.clear_clipboard()
+            end, bufnr, "Deselect all files and directories")
         end,
 
         hijack_cursor = false,
@@ -119,7 +142,7 @@ return function()
             number = true,
             relativenumber = true,
             signcolumn = "yes",
-            width = 30,
+            width = nil,
             float = {
                 enable = true,
                 quit_on_focus_loss = true,
@@ -204,8 +227,8 @@ return function()
                         symlink_open = "",
                     },
                     git = {
-                        unstaged = "✗",
-                        staged = "✓",
+                        unstaged = "U",
+                        staged = "S",
                         unmerged = "",
                         renamed = "➜",
                         untracked = "★",
@@ -336,7 +359,7 @@ return function()
         },
 
         notify = {
-            threshold = vim.log.levels.INFO,
+            threshold = vim.log.levels.ERROR,
             absolute_path = true,
         },
 
