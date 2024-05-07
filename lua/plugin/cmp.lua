@@ -7,9 +7,6 @@ return function()
         },
     })
 
-    local dictionary = require("cmp_dictionary")
-    dictionary.setup({ paths = { "/etc/xdg/nvim/en.dict" } })
-
     local cmp = require("cmp")
     -- local cmp_context = require("cmp.config.context")
     local luasnip = require("luasnip")
@@ -62,14 +59,12 @@ return function()
             {
                 name = "nvim_lsp_signature_help",
                 keyword_length = 1,
-                max_item_count = 15,
             },
             {
                 name = "nvim_lsp",
                 keyword_length = 1,
-                max_item_count = 10,
                 entry_filter = function(entry, _)
-                    return cmp.lsp.CompletionItemKind.Text ~= entry:get_kind()
+                    return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
                 end,
             },
             {
@@ -165,6 +160,9 @@ return function()
             },
         })
     })
+
+    local dictionary = require("cmp_dictionary")
+    dictionary.setup({ paths = { "/etc/xdg/nvim/en.dict" } })
 
     require("util.keymap")
 
