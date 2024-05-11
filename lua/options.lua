@@ -10,6 +10,9 @@ return function()
     vim.g.loaded_netrw       = 1
     vim.g.loaded_netrwPlugin = 1
 
+    -- Disable modelines to prevent arbitrary code execution
+    vim.o.modeline           = false;
+
     -- Indentation
     vim.opt.shiftwidth       = 4    -- Indentation width.
     vim.opt.smarttab         = true -- Insert spaces instead of tabs.
