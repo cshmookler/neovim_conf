@@ -364,6 +364,8 @@ return function()
             filetypes = { "sh" },
             auto_start = true,
             root_dir = vim.fn.getcwd(),
+            format = false,
+            format_on_save = false,
             on_attach = function(client, bufnr)
                 on_attach(client, bufnr)
                 -- vim.api.nvim_create_autocmd("BufWritePost", {
@@ -376,6 +378,21 @@ return function()
                 --     end,
                 -- })
             end,
+            capabilities = capabilities,
+        },
+
+        ["cmake-language-server"] = {
+            name = "cmake-language-server",
+            lang = "cmake",
+            cmd = { "cmake-language-server" },
+            init_options = {
+                buildDirectory = "build",
+            },
+            auto_start = true,
+            root_dir = vim.fn.getcwd(),
+            format = true,
+            format_on_save = true,
+            on_attach = on_attach,
             capabilities = capabilities,
         },
     }
@@ -391,10 +408,12 @@ return function()
             end
             vim.lsp.buf_attach_client(0, client)
         end
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = config.filetypes,
-            callback = start_or_attach,
-        })
+        if config.filetypes ~= nil then
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = config.filetypes,
+                callback = start_or_attach,
+            })
+        end
         vim.api.nvim_create_user_command("LspStart" .. config.lang, start_or_attach, {})
         ::continue::
     end
