@@ -150,11 +150,15 @@ return function()
                     local ui = vim.api.nvim_list_uis()[1]
                     return {
                         relative = "editor",
-                        border = "single", -- none, single, double, rounded, solid, or shadow
+                        border = "rounded", -- none, single, double, rounded, solid, or shadow
                         width = math.floor(ui.width * 0.5),
                         height = math.floor(ui.height * 0.5),
                         row = math.floor(ui.height * 0.25),
                         col = math.floor(ui.width * 0.25),
+                        -- width = math.floor(ui.width * 0.75),
+                        -- height = math.floor(ui.height * 0.75),
+                        -- row = math.floor(ui.height * 0.125),
+                        -- col = math.floor(ui.width * 0.125),
                     }
                 end,
             },
