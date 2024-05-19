@@ -282,18 +282,15 @@ return function()
             capabilities = capabilities,
         },
 
-        ["Swift-MesonLSP"] = {
-            name = "Swift-MesonLSP",
+        ["mesonlsp"] = {
+            name = "mesonlsp",
             lang = "meson",
-            cmd = { "Swift-MesonLSP", "--lsp" },
+            cmd = { "mesonlsp", "--lsp" },
             filetypes = { "meson" },
             auto_start = true,
             root_dir = vim.fn.getcwd(),
-            format = false,
-            format_on_save = false,
-            -- root_dir = vim.fs.dirname(vim.fs.find({
-            --     ".git",
-            -- }, { upward = true })[1] or vim.fn.getcwd()),
+            format = true,
+            format_on_save = true,
             on_attach = function(client, bufnr)
                 on_attach(client, bufnr)
                 vim.api.nvim_create_autocmd("BufWritePost", {
