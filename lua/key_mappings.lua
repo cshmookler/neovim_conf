@@ -36,7 +36,7 @@ return function()
         vim.ui.input({
             prompt = "Save unwritten changes to " .. name .. "?\n[Y]es, (N)o, (C)ancel: ",
         }, function(input)
-            if input == "c" or input == "C" then
+            if input == nil or input == "" or input == "c" or input == "C" then
                 return
             end
 
