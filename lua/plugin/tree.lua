@@ -76,10 +76,12 @@ return function()
             nbufnoremap("p", function()
                 nvim_tree_api.fs.paste()
                 nvim_tree_api.marks.clear()
+                nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Copy selected files or directories to another directory")
 
             nbufnoremap("m", function()
                 nvim_tree_api.marks.bulk.move()
+                nvim_tree_api.marks.clear()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Move selected files or directories to another directory")
 
@@ -89,6 +91,8 @@ return function()
                 else
                     nvim_tree_api.marks.bulk.trash()
                 end
+                nvim_tree_api.marks.clear()
+                nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Trash selected files or directories")
 
             nbufnoremap("D", function()
@@ -97,6 +101,8 @@ return function()
                 else
                     nvim_tree_api.marks.bulk.delete()
                 end
+                nvim_tree_api.marks.clear()
+                nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Delete selected files or directories")
 
             nbufnoremap("x", function()
