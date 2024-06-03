@@ -163,7 +163,7 @@ return function()
 
     local dictionary = require("cmp_dictionary")
     dictionary.setup({
-        paths = { "/etc/xdg/nvim/en.dict" },
+        paths = { "~/.local/share/nvim/en.dict" },
         first_case_insensitive = true,
     })
 
