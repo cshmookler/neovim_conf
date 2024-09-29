@@ -50,7 +50,6 @@ return function()
                     nerdfont = "Nerd Font Icon",
                     buffer = "Buffer",
                     dictionary = "Dictionary",
-                    spell = "Spelling",
                 }
                 item.kind = kind[entry.source.name]
                 return item
@@ -60,17 +59,23 @@ return function()
         sources = {
             {
                 name = "nvim_lsp_signature_help",
-                keyword_length = 1,
+                group_index = 1,
+                priority = 100,
+                keyword_length = 0,
             },
             {
                 name = "nvim_lsp",
-                keyword_length = 1,
+                group_index = 2,
+                priority = 90,
+                keyword_length = 0,
                 entry_filter = function(entry, _)
                     return entry:get_kind() ~= cmp.lsp.CompletionItemKind.Text
                 end,
             },
             {
                 name = "luasnip",
+                group_index = 2,
+                priority = 80,
                 keyword_length = 2,
                 max_item_count = 1,
             },
@@ -81,21 +86,29 @@ return function()
             -- },
             {
                 name = "calc",
+                group_index = 3,
+                priority = 50,
                 keyword_length = 1,
                 max_item_count = 2,
             },
             {
                 name = "emoji",
+                group_index = 3,
+                priority = 20,
                 keyword_length = 1,
                 max_item_count = 10,
             },
             {
                 name = "nerdfont",
+                group_index = 3,
+                priority = 20,
                 keyword_length = 1,
                 max_item_count = 10,
             },
             {
                 name = "dictionary",
+                group_index = 4,
+                priority = 10,
                 keyword_length = 2,
                 max_item_count = 5,
             },
@@ -237,17 +250,19 @@ return function()
         end,
     })
 
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
     local neodev = require("neodev")
     neodev.setup {}
+
+    -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     local lspconfig = require("lspconfig")
     lspconfig.util.default_config = vim.tbl_extend(
         "force",
         lspconfig.util.default_config,
         {
-            capabilities = capabilities,
+            -- -- Limit LSP features to only those supported by nvim-cmp.
+            -- -- Comment this out to use all possible features, regardless of what nvim-cmp supports.
+            -- capabilities = capabilities,
         }
     )
 
