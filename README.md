@@ -28,12 +28,12 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
 
 ## Installation
 
-#### 1.&nbsp; Install Neovim 0.10.x, Aspell, xsel (optional), and Vivify (optional).
+#### 1.&nbsp; Install Neovim 0.10.x, Aspell, xsel (optional), Vivify (optional), and LSP servers (optional).
 
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim aspell-en xsel
+sudo pacman -S neovim aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver yaml-language-server eslint-language-server clang lua-language-server vim-language-server jedi-language-server bash-language-server rust-analyzer texlab
 yay -S vivify
 ```
 

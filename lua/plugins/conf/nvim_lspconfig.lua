@@ -243,20 +243,25 @@ return function()
     neodev.setup {}
 
     local lspconfig = require("lspconfig")
-    lspconfig.html.setup { -- vscode-html-languageserver
-        capabilities = capabilities,
+    lspconfig.util.default_config = vim.tbl_extend(
+        "force",
+        lspconfig.util.default_config,
+        {
+            capabilities = capabilities,
+        }
+    )
+
+    lspconfig.html.setup {   -- vscode-html-languageserver
     }
     lspconfig.jsonls.setup { -- vscode-json-languageserver
-        capabilities = capabilities,
     }
-    lspconfig.cssls.setup { -- vscode-css-languageserver
-        capabilities = capabilities,
+    lspconfig.cssls.setup {  -- vscode-css-languageserver
+    }
+    lspconfig.yamlls.setup { -- yaml-language-server
     }
     lspconfig.eslint.setup { -- eslint-language-server
-        capabilities = capabilities,
     }
     lspconfig.clangd.setup { -- clang
-        capabilities = capabilities,
     }
     lspconfig.lua_ls.setup { -- lua-language-server
         settings = {
@@ -272,13 +277,16 @@ return function()
                 },
             },
         },
-        capabilities = capabilities,
+    }
+    lspconfig.vimls.setup {                -- vim-language-server
     }
     lspconfig.jedi_language_server.setup { -- jedi-language-server
-        capabilities = capabilities,
     }
-    lspconfig.bashls.setup { -- bash-language-server
-        capabilities = capabilities,
+    lspconfig.bashls.setup {               -- bash-language-server
+    }
+    lspconfig.rust_analyzer.setup {        -- rust_analyzer
+    }
+    lspconfig.texlab.setup {               -- texlab
     }
 
     vim.g.code_action_menu_show_details = false
