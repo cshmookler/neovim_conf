@@ -28,7 +28,9 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
 
 ## Installation
 
-#### 1.&nbsp; Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), and LaTeX.
+#### 1.&nbsp; Install required packages.
+
+Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), and LaTeX.
 
 ##### Linux (MOOS):
 
@@ -49,13 +51,17 @@ git clone https://github.com/cshmookler/neovim_conf ~/.config/nvim
 aspell dump master | aspell extract > ~/.local/share/nvim/dict
 ```
 
-#### 4.&nbsp; Start Neovim. All plugins will be automatically downloaded and installed.
+#### 4.&nbsp; Start Neovim.
+
+All plugins will be automatically downloaded and installed.
 
 ```bash
 nvim
 ```
 
-#### 5.&nbsp; Once all plugins are installed, press 'q' to exit the plugin installation window. Enter ':checkhealth' to verify that everything is working properly.
+#### 5.&nbsp; Verify the integrity of the installation.
+
+Once all plugins are installed, press 'q' to exit the plugin installation window. Enter ':checkhealth' to verify that everything is working properly.
 
 ```vim
 :checkhealth
