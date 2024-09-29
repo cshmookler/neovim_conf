@@ -28,34 +28,34 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
 
 ## Installation
 
-### 1.&nbsp; Install Neovim 0.10.x, Aspell, xsel (optional), and Vivify (optional).
+#### 1.&nbsp; Install Neovim 0.10.x, Aspell, xsel (optional), and Vivify (optional).
 
-#### Linux (MOOS):
+##### Linux (MOOS):
 
 ```bash
 sudo pacman -S neovim aspell-en xsel
 yay -S vivify
 ```
 
-### 2.&nbsp; Clone this project to the Neovim configuration directory.
+#### 2.&nbsp; Clone this project to the Neovim configuration directory.
 
 ```bash
 git clone https://github.com/cshmookler/neovim_conf ~/.config/nvim
 ```
 
-### 3.&nbsp; Generate the dictionary file.
+#### 3.&nbsp; Generate the dictionary file.
 
 ```bash
 aspell dump master | aspell extract > ~/.local/share/nvim/dict
 ```
 
-### 4.&nbsp; Start Neovim. All plugins will be automatically downloaded and installed.
+#### 4.&nbsp; Start Neovim. All plugins will be automatically downloaded and installed.
 
 ```bash
 nvim
 ```
 
-### 5.&nbsp; Once all plugins are installed, press 'q' to exit the plugin installation window. Enter ':checkhealth' to verify that everything is working properly.
+#### 5.&nbsp; Once all plugins are installed, press 'q' to exit the plugin installation window. Enter ':checkhealth' to verify that everything is working properly.
 
 ```vim
 :checkhealth
