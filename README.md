@@ -63,5 +63,5 @@ nvim
 
 ## TODO
 
-- [ ] Fix washed out colors in the integrated terminal.
+- [X] Fix washed out colors in the integrated terminal.
 - [ ] Create keymaps for Vivify.
