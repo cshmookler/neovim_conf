@@ -33,8 +33,8 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver yaml-language-server eslint-language-server clang lua-language-server vim-language-server jedi-language-server bash-language-server rust-analyzer texlab
-yay -S vivify
+sudo pacman -S neovim aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver yaml-language-server eslint-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer texlab
+yay -S vivify vim-language-server
 ```
 
 #### 2.&nbsp; Clone this project to the Neovim configuration directory.
