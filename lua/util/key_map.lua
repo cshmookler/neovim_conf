@@ -61,7 +61,6 @@ nxnoremap = function(lhs, rhs, desc)
     noremap({ "n", "x" }, lhs, rhs, desc)
 end
 
-
 tnoremap = function(lhs, rhs, desc)
     noremap("t", lhs, rhs, desc)
 end

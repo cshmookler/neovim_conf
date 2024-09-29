@@ -1,14 +1,8 @@
--- Set Neovim options
-require("options")()
+-- Set custom options
+require("config.options")
 
--- Install required programs (if not already installed)
-require("bootstrap")()
+-- Setup the plugin manager
+require("config.lazy")
 
--- Install plugins (if not already installed)
-require("plugin_list")()
-
--- Key mappings
-require("key_mappings")()
-
--- Commands
-require("commands")()
+-- Set custom key mappings
+require("config.key_mappings")

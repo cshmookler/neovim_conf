@@ -1,9 +1,7 @@
 return function()
-    require("util.keymap")
-
+    require("util.key_map")
     local tree = require("nvim-tree")
     tree.setup({
-
         on_attach = function(bufnr) -- or "default"
             local nvim_tree_api = require("nvim-tree.api")
             -- nvim_tree_api.config.mappings.default_on_attach(bufnr)
@@ -28,7 +26,7 @@ return function()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Goto next tab")
 
-            nbufnoremap(";", function()
+            nbufnoremap("f", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 if node.type == nil and node.name == ".." then
                     vim.cmd.tcd("..")
@@ -38,12 +36,12 @@ return function()
                 end
             end, bufnr, "Open file in pane")
 
-            nbufnoremap("'", function()
+            nbufnoremap("v", function()
                 nvim_tree_api.node.open.tab()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in new tab")
 
-            nbufnoremap(":", function()
+            nbufnoremap("F", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 if node.type == "directory" then
                     vim.cmd.tcd(node.absolute_path)
@@ -110,43 +108,30 @@ return function()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Deselect all files and directories")
         end,
-
         hijack_cursor = false,
-
         auto_reload_on_write = true,
-
         disable_netrw = false,
-
         hijack_netrw = true,
-
         hijack_unnamed_buffer_when_opening = false,
-
         root_dirs = {},
-
         prefer_startup_root = false,
-
         sync_root_with_cwd = true,
-
         reload_on_bufenter = false,
-
         respect_buf_cwd = false,
-
         select_prompts = false,
-
         sort = {
             sorter = "name",
             folders_first = true,
             files_first = false,
         },
-
         view = {
             centralize_selection = false,
             cursorline = true,
             debounce_delay = 15,
             side = "left",
             preserve_window_proportions = true,
-            number = true,
-            relativenumber = true,
+            number = false,
+            relativenumber = false,
             signcolumn = "yes",
             width = nil,
             float = {
@@ -156,7 +141,7 @@ return function()
                     local ui = vim.api.nvim_list_uis()[1]
                     return {
                         relative = "editor",
-                        border = "rounded", -- none, single, double, rounded, solid, or shadow
+                        border = "single", -- none, single, double, rounded, solid, or shadow
                         width = math.floor(ui.width * 0.5),
                         height = math.floor(ui.height * 0.5),
                         row = math.floor(ui.height * 0.25),
@@ -169,7 +154,6 @@ return function()
                 end,
             },
         },
-
         renderer = {
             add_trailing = false,
             group_empty = false,
@@ -248,23 +232,19 @@ return function()
                 },
             },
         },
-
         hijack_directories = {
             enable = true,
             auto_open = true,
         },
-
         update_focused_file = {
             enable = false,
             update_root = false,
             ignore_list = {},
         },
-
         system_open = {
             cmd = "",
             args = {},
         },
-
         git = {
             enable = true,
             show_on_dirs = true,
@@ -273,7 +253,6 @@ return function()
             timeout = 400,
             cygwin_support = false,
         },
-
         diagnostics = {
             enable = true,
             show_on_dirs = true,
@@ -290,13 +269,11 @@ return function()
                 error = "",
             },
         },
-
         modified = {
             enable = true,
             show_on_dirs = true,
             show_on_open_dirs = true,
         },
-
         filters = {
             git_ignored = false,
             dotfiles = false,
@@ -305,18 +282,15 @@ return function()
             custom = {},
             exclude = {},
         },
-
         live_filter = {
             prefix = "[FILTER]: ",
             always_show_folders = true,
         },
-
         filesystem_watchers = {
             enable = true,
             debounce_delay = 50,
             ignore_dirs = {},
         },
-
         actions = {
             use_system_clipboard = true,
             change_dir = {
@@ -333,7 +307,7 @@ return function()
                     col = 1,
                     row = 1,
                     relative = "cursor",
-                    border = "shadow",
+                    border = "single",
                     style = "minimal",
                 },
             },
@@ -355,11 +329,9 @@ return function()
                 close_window = true,
             },
         },
-
         trash = {
             cmd = "gio trash",
         },
-
         tab = {
             sync = {
                 open = false,
@@ -367,16 +339,13 @@ return function()
                 ignore = {},
             },
         },
-
         notify = {
             threshold = vim.log.levels.ERROR,
             absolute_path = true,
         },
-
         help = {
             sort_by = "key",
         },
-
         ui = {
             confirm = {
                 remove = true,
@@ -384,9 +353,7 @@ return function()
                 default_yes = false,
             },
         },
-
         experimental = {},
-
         log = {
             enable = false,
             truncate = false,
@@ -401,6 +368,5 @@ return function()
                 watcher = false,
             },
         },
-
     })
 end

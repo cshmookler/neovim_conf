@@ -1,25 +1,67 @@
-# **My Neovim Configuration**
+# **neovim_conf**
 
-This is my personal Neovim configuration. It includes syntax highlighting, autocompletion, code linting, git integration, filesystem integration, and other useful plugins.
+The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos). Includes several features by default:
 
-## **Installation**
+ - Programming language support (C, C++, Python, Lua, HTML, CSS, JS, TS, Bash, JSON):
+    - Syntax highlighting
+    - Intellisense
+    - Code suggestions and completion
+    - Static analysis
+    - Automatic formatting on write
+ - Integrated terminal
+ - Different workspaces:
+    - Each tab is its own workspace
+    - Each workspace has its own working directory
+ - Window multiplexing
+    - View multiple files in the same tab by opening them in separate panes.
+    - View different parts of the same file by splitting it into two panes.
+ - Spoken language support (English by default):
+    - Word completion from a pre-generated dictionary
+ - Filesystem integration:
+    - Builtin file explorer for creating/trashing/deleting/renaming/copying/moving files and directories
+    - Path completion in commands and code
+ - Git integration:
+    - Added/modified/removed lines indicated in the sign column
+    - Status of files/directories shown in the file explorer
+ - Browser integration:
+    - Preview files in a web browser with :Vivify
 
-**1.** Install Neovim 0.10.x (nightly).
+## Installation
 
-**2.** Clone this repository in your Neovim configuration directory.
+### 1.&nbsp; Install Neovim 0.10.x, Aspell, xsel (optional), and Vivify (optional).
+
+#### Linux (MOOS):
 
 ```bash
-git clone https://github.com/cshmookler/config.nvim ~/.config/nvim
+sudo pacman -S neovim aspell-en xsel
+yay -S vivify
 ```
 
-**3.** Start NeoVim. All plugins will automatically download and install.
+### 2.&nbsp; Clone this project to the Neovim configuration directory.
+
+```bash
+git clone https://github.com/cshmookler/neovim_conf ~/.config/nvim
+```
+
+### 3.&nbsp; Generate the dictionary file.
+
+```bash
+aspell dump master | aspell extract > ~/.local/share/nvim/dict
+```
+
+### 4.&nbsp; Start Neovim. All plugins will be automatically downloaded and installed.
 
 ```bash
 nvim
 ```
 
-**4.** Once all plugins are installed, press 'q' to exit the plugin installation window and enter ':checkhealth'.
+### 5.&nbsp; Once all plugins are installed, press 'q' to exit the plugin installation window. Enter ':checkhealth' to verify that everything is working properly.
 
 ```vim
 :checkhealth
 ```
+
+## TODO
+
+- [ ] Fix washed out colors in the integrated terminal.
+- [ ] Create keymaps for Vivify.
