@@ -1,15 +1,15 @@
 require("util.key_map")
 
--- -- Move by visual lines instead of actual lines.
--- nvnoremap("j", "gj", "Move down by visual line")
--- nvnoremap("k", "gk", "Move up by one visual line")
+-- Move by visual lines instead of actual lines.
+nvnoremap("j", "gj", "Move down by visual line")
+nvnoremap("k", "gk", "Move up by one visual line")
 
 -- Fast vertical movement
 nvnoremap("H", "3b", "Three words left")
-nvnoremap("J", "3j", "Three lines down")
-nvnoremap("K", "3k", "Three lines up")
--- nvnoremap("J", "3gj", "Three visual lines down")
--- nvnoremap("K", "3gk", "Three visual lines up")
+-- nvnoremap("J", "3j", "Three lines down")
+-- nvnoremap("K", "3k", "Three lines up")
+nvnoremap("J", "3gj", "Three visual lines down")
+nvnoremap("K", "3gk", "Three visual lines up")
 nvnoremap("L", "3w", "Three words right")
 
 -- More intuitive undo and redo

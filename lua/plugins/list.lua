@@ -116,8 +116,4 @@ return {
         tag = "legacy",
         opts = {},
     },
-
-    {
-        "jannis-baum/vivify.vim"
-    },
 }
