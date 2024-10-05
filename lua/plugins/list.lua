@@ -30,8 +30,7 @@ return {
             "hrsh7th/cmp-emoji",
             "chrisgrieser/cmp-nerdfont",
         },
-        -- Currently configured by the nvim_lspconfig  config
-        -- config = require("plugins.conf.nvim_cmp"),
+        -- Currently configured by plugins.conf.lspconfig
     },
 
     {
@@ -41,7 +40,12 @@ return {
             "folke/neodev.nvim",
             "weilbith/nvim-code-action-menu",
         },
-        config = require("plugins.conf.nvim_lspconfig")
+        config = require("plugins.conf.lspconfig"),
+    },
+
+    {
+        "windwp/nvim-ts-autotag",
+        config = require("plugins.conf.ts_autotag"),
     },
 
     {
@@ -63,7 +67,7 @@ return {
 
     {
         "nvim-tree/nvim-tree.lua",
-        config = require("plugins.conf.nvim_tree"),
+        config = require("plugins.conf.tree"),
     },
 
     {
