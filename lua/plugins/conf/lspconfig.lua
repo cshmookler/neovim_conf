@@ -181,6 +181,19 @@ return function()
         first_case_insensitive = true,
     })
 
+    local format_on_save = require("format-on-save")
+    local formatters = require("format-on-save.formatters")
+    format_on_save.setup({
+        formatter_by_ft = {
+            python = formatters.black,
+        },
+        fallback_formatter = {
+            formatters.remove_trailing_whitespace,
+            formatters.remove_trailing_newlines,
+        },
+        run_with_sh = false,
+    })
+
     require("util.key_map")
 
     nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
@@ -210,32 +223,6 @@ return function()
             nbufnoremap("<Leader>c", ":CodeActionMenu<CR>", bufnr, "Code action") -- vim.lsp.buf.code_action
             nbufnoremap("Y", vim.lsp.buf.hover, bufnr, "Hover")
             nbufnoremap("<Leader>F", vim.lsp.buf.format, bufnr, "Format")
-
-            if client.server_capabilities.documentFormattingProvider then
-                vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
-                    vim.lsp.buf.format()
-                end, {})
-                vim.api.nvim_buf_create_user_command(bufnr, "FormatOnSaveEnable", function()
-                    vim.g._format_on_save = true
-                    vim.api.nvim_out_write("enabled\n")
-                end, {})
-                vim.api.nvim_buf_create_user_command(bufnr, "FormatOnSaveDisable", function()
-                    vim.g._format_on_save = false
-                    vim.api.nvim_out_write("disabled\n")
-                end, {})
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                    buffer = bufnr,
-                    callback = function()
-                        if not vim.g._format_on_save then
-                            return
-                        end
-                        local view = vim.fn.winsaveview()
-                        vim.lsp.buf.format({ bufnr = bufnr })
-                        vim.fn.winrestview(view)
-                    end,
-                    group = lsp_autocmds_group,
-                })
-            end
         end
     })
 

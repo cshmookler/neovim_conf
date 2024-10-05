@@ -30,12 +30,12 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
 
 #### 1.&nbsp; Install required packages.
 
-Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), and LaTeX.
+Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), Formatters (optional), and LaTeX.
 
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver yaml-language-server typescript-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience
+sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience
 yay -S vim-language-server
 ```
 

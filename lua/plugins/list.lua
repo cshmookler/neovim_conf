@@ -29,6 +29,7 @@ return {
             "rafamadriz/friendly-snippets",
             "hrsh7th/cmp-emoji",
             "chrisgrieser/cmp-nerdfont",
+            "elentok/format-on-save.nvim",
         },
         -- Currently configured by plugins.conf.lspconfig
     },
