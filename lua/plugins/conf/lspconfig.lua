@@ -190,6 +190,7 @@ return function()
         fallback_formatter = {
             formatters.remove_trailing_whitespace,
             formatters.remove_trailing_newlines,
+            formatters.lsp,
         },
         run_with_sh = false,
     })
