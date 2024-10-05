@@ -253,32 +253,30 @@ return function()
     local neodev = require("neodev")
     neodev.setup {}
 
-    -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     local lspconfig = require("lspconfig")
-    lspconfig.util.default_config = vim.tbl_extend(
-        "force",
-        lspconfig.util.default_config,
-        {
-            -- -- Limit LSP features to only those supported by nvim-cmp.
-            -- -- Comment this out to use all possible features, regardless of what nvim-cmp supports.
-            -- capabilities = capabilities,
-        }
-    )
 
-    lspconfig.html.setup {   -- vscode-html-languageserver
+    lspconfig.html.setup { -- vscode-html-languageserver
+        capabilities = capabilities,
     }
     lspconfig.jsonls.setup { -- vscode-json-languageserver
+        capabilities = capabilities,
     }
-    lspconfig.cssls.setup {  -- vscode-css-languageserver
+    lspconfig.cssls.setup { -- vscode-css-languageserver
+        capabilities = capabilities,
     }
     lspconfig.yamlls.setup { -- yaml-language-server
+        capabilities = capabilities,
     }
     lspconfig.eslint.setup { -- eslint-language-server
+        capabilities = capabilities,
     }
     lspconfig.clangd.setup { -- clang
+        capabilities = capabilities,
     }
     lspconfig.lua_ls.setup { -- lua-language-server
+        capabilities = capabilities,
         settings = {
             Lua = {
                 completion = {
@@ -293,15 +291,22 @@ return function()
             },
         },
     }
-    lspconfig.vimls.setup {                -- vim-language-server
+    lspconfig.vimls.setup { -- vim-language-server
+        capabilities = capabilities,
     }
     lspconfig.jedi_language_server.setup { -- jedi-language-server
+        capabilities = capabilities,
     }
-    lspconfig.bashls.setup {               -- bash-language-server
+    lspconfig.bashls.setup { -- bash-language-server
+        capabilities = capabilities,
     }
-    lspconfig.rust_analyzer.setup {        -- rust_analyzer
+    lspconfig.rust_analyzer.setup { -- rust_analyzer
+        capabilities = capabilities,
     }
-    lspconfig.texlab.setup {               -- texlab
+    lspconfig.texlab.setup { -- texlab
+        -- -- Using the capabilities given by nvim-cmp appears to break texlab.
+        -- capabilities = capabilities,
+        capabilities = vim.lsp.protocol.make_client_capabilities(),
     }
 
     vim.g.code_action_menu_show_details = false
