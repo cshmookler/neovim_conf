@@ -35,7 +35,7 @@ Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (opt
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver yaml-language-server eslint-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience
+sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver yaml-language-server typescript-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience
 yay -S vim-language-server
 ```
 

@@ -269,7 +269,7 @@ return function()
     lspconfig.yamlls.setup { -- yaml-language-server
         capabilities = capabilities,
     }
-    lspconfig.eslint.setup { -- eslint-language-server
+    lspconfig.ts_ls.setup { -- typescript-language-server
         capabilities = capabilities,
     }
     lspconfig.clangd.setup { -- clang
