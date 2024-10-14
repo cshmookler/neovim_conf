@@ -121,4 +121,9 @@ return {
         tag = "legacy",
         opts = {},
     },
+
+    {
+        "norcalli/nvim-colorizer.lua",
+        config = require("plugins.conf.colorizer"),
+    },
 }
