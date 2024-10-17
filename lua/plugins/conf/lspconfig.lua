@@ -15,6 +15,7 @@ return function()
     })
 
     local cmp = require("cmp")
+
     local luasnip = require("luasnip")
     luasnip.config.setup()
 
@@ -42,14 +43,14 @@ return function()
             fields = { "abbr", "kind" },
             format = function(entry, item)
                 local kind = {
-                    nvim_lsp = item.kind,
-                    nvim_lsp_signature_help = "Signature",
-                    luasnip = "Snippet",
-                    calc = "Calc",
-                    emoji = "Emoji",
-                    nerdfont = "Nerd Font Icon",
-                    buffer = "Buffer",
-                    dictionary = "Dictionary",
+                    ["nvim_lsp"] = item.kind,
+                    ["nvim_lsp_signature_help"] = "Signature",
+                    ["luasnip"] = "Snippet",
+                    ["calc"] = "Calc",
+                    ["emoji"] = "Emoji",
+                    ["nerdfont"] = "Nerd Font Icon",
+                    ["buffer"] = "Buffer",
+                    ["dictionary"] = "Dictionary",
                 }
                 item.kind = kind[entry.source.name]
                 return item
