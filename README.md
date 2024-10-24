@@ -2,7 +2,7 @@
 
 The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos). Includes several features by default:
 
- - Programming language support (C, C++, Rust, Python, Lua, Vim, HTML, CSS, JS, TS, Bash, JSON, YAML, LaTeX):
+ - Programming language support (C, C++, C#, Rust, Python, Lua, Vim, HTML, CSS, JS, TS, Bash, JSON, YAML, LaTeX):
     - Syntax highlighting
     - Intellisense
     - Code suggestions and completion
@@ -30,13 +30,13 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
 
 #### 1.&nbsp; Install required packages.
 
-Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), Formatters (optional), and LaTeX.
+Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), Formatters (optional), LaTeX, and the .NET SDK.
 
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience
-yay -S vim-language-server
+sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience dotnet-sdk
+yay -S vim-language-server csharp-ls
 ```
 
 #### 2.&nbsp; Clone this project to the Neovim configuration directory.

@@ -297,6 +297,9 @@ return function()
         -- capabilities = capabilities,
         capabilities = vim.lsp.protocol.make_client_capabilities(),
     }
+    lspconfig.csharp_ls.setup {
+        capabilities = capabilities,
+    }
 
     vim.g.code_action_menu_show_details = false
     vim.g.code_action_menu_show_diff = true
