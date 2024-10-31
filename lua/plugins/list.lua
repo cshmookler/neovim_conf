@@ -118,7 +118,7 @@ return {
 
     {
         "j-hui/fidget.nvim",
-        tag = "legacy",
+        tag = "v1.4.5",
         opts = {},
     },
 
