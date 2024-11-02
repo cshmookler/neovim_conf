@@ -13,35 +13,33 @@ return {
     },
 
     {
-        "hrsh7th/nvim-cmp",
-        priority = 300,
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-nvim-lsp-signature-help",
-            "hrsh7th/cmp-nvim-lsp-document-symbol",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-calc",
-            "uga-rosa/cmp-dictionary",
-            "L3MON4D3/LuaSnip",
-            "saadparwaiz1/cmp_luasnip",
-            "rafamadriz/friendly-snippets",
-            "hrsh7th/cmp-emoji",
-            "chrisgrieser/cmp-nerdfont",
-            "elentok/format-on-save.nvim",
-        },
-        -- Currently configured by plugins.conf.lspconfig
-    },
-
-    {
         "neovim/nvim-lspconfig",
         priority = 100,
         dependencies = {
+            {
+                "hrsh7th/nvim-cmp",
+                dependencies = {
+                    "hrsh7th/cmp-nvim-lsp",
+                    "hrsh7th/cmp-nvim-lsp-signature-help",
+                    "hrsh7th/cmp-nvim-lsp-document-symbol",
+                    "hrsh7th/cmp-path",
+                    "hrsh7th/cmp-buffer",
+                    "hrsh7th/cmp-cmdline",
+                    "hrsh7th/cmp-calc",
+                    "uga-rosa/cmp-dictionary",
+                    "L3MON4D3/LuaSnip",
+                    "saadparwaiz1/cmp_luasnip",
+                    "rafamadriz/friendly-snippets",
+                    "hrsh7th/cmp-emoji",
+                    "chrisgrieser/cmp-nerdfont",
+                },
+            },
             "folke/neodev.nvim",
             "weilbith/nvim-code-action-menu",
+            "elentok/format-on-save.nvim",
+            "mfussenegger/nvim-lint",
         },
-        config = require("plugins.conf.lspconfig"),
+        config = require("plugins.conf.lsp"),
     },
 
     {

@@ -186,7 +186,13 @@ return function()
     local formatters = require("format-on-save.formatters")
     format_on_save.setup({
         formatter_by_ft = {
-            python = formatters.black,
+            python = {
+                formatters.black,
+                formatters.shell({
+                    cmd = { "usort", "format", "%" },
+                    tempfile = "random",
+                }),
+            },
         },
         fallback_formatter = {
             formatters.remove_trailing_whitespace,
@@ -195,6 +201,11 @@ return function()
         },
         run_with_sh = false,
     })
+
+    local neodev = require("neodev")
+    neodev.setup {}
+
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     require("util.key_map")
 
@@ -206,43 +217,35 @@ return function()
     local lsp_autocmds_group = "custom_lsp_autocmds"
     vim.api.nvim_create_augroup(lsp_autocmds_group, {})
 
+    local on_attach = function(args)
+        local bufnr = args.buf
+
+        nbufnoremap("gd", vim.lsp.buf.definition, bufnr, "Goto definition")
+        nbufnoremap("gD", vim.lsp.buf.declaration, bufnr, "Goto declaration")
+        nbufnoremap("gt", vim.lsp.buf.type_definition, bufnr, "Goto type defition")
+        nbufnoremap("gI", vim.lsp.buf.implementation, bufnr, "Goto implementation")
+        nbufnoremap("gr", vim.lsp.buf.references, bufnr, "Goto references")
+        nbufnoremap("<Leader>r", vim.lsp.buf.rename, bufnr, "Rename")
+        nbufnoremap("<Leader>c", ":CodeActionMenu<CR>", bufnr, "Code action") -- vim.lsp.buf.code_action
+        nbufnoremap("Y", vim.lsp.buf.hover, bufnr, "Hover")
+        nbufnoremap("<Leader>F", vim.lsp.buf.format, bufnr, "Format")
+    end
+
+    local on_detach = function(args)
+        local bufnr = args.buf
+
+        vim.api.nvim_clear_autocmds({
+            buffer = bufnr,
+            group = lsp_autocmds_group,
+        })
+    end
+
     vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-            local bufnr = args.buf
-
-            local client = vim.lsp.get_client_by_id(args.data.client_id)
-            if client == nil then
-                vim.api.nvim_err_writeln("Failed to get the LSP client from its ID")
-                return
-            end
-
-            nbufnoremap("gd", vim.lsp.buf.definition, bufnr, "Goto definition")
-            nbufnoremap("gD", vim.lsp.buf.declaration, bufnr, "Goto declaration")
-            nbufnoremap("gt", vim.lsp.buf.type_definition, bufnr, "Goto type defition")
-            nbufnoremap("gI", vim.lsp.buf.implementation, bufnr, "Goto implementation")
-            nbufnoremap("gr", vim.lsp.buf.references, bufnr, "Goto references")
-            nbufnoremap("<Leader>r", vim.lsp.buf.rename, bufnr, "Rename")
-            nbufnoremap("<Leader>c", ":CodeActionMenu<CR>", bufnr, "Code action") -- vim.lsp.buf.code_action
-            nbufnoremap("Y", vim.lsp.buf.hover, bufnr, "Hover")
-            nbufnoremap("<Leader>F", vim.lsp.buf.format, bufnr, "Format")
-        end
+        callback = on_attach,
     })
-
     vim.api.nvim_create_autocmd("LspDetach", {
-        callback = function(args)
-            local bufnr = args.buf
-
-            vim.api.nvim_clear_autocmds({
-                buffer = bufnr,
-                group = lsp_autocmds_group,
-            })
-        end,
+        callback = on_detach,
     })
-
-    local neodev = require("neodev")
-    neodev.setup {}
-
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     local lspconfig = require("lspconfig")
 
@@ -297,9 +300,20 @@ return function()
         -- capabilities = capabilities,
         capabilities = vim.lsp.protocol.make_client_capabilities(),
     }
-    lspconfig.csharp_ls.setup {
+    lspconfig.csharp_ls.setup { -- csharp-ls
         capabilities = capabilities,
     }
+
+    local lint = require("lint")
+    lint.linters_by_ft = {
+        python = { "mypy", "flake8" }
+    }
+
+    vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+        callback = function()
+            lint.try_lint()
+        end,
+    })
 
     vim.g.code_action_menu_show_details = false
     vim.g.code_action_menu_show_diff = true
