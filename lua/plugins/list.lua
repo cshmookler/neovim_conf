@@ -124,4 +124,9 @@ return {
         "norcalli/nvim-colorizer.lua",
         config = require("plugins.conf.colorizer"),
     },
+
+    {
+        "RaafatTurki/hex.nvim",
+        config = require("plugins.conf.hex")
+    },
 }
