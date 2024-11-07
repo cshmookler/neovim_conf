@@ -193,6 +193,7 @@ return function()
                     tempfile = "random",
                 }),
             },
+            xxd = {}, -- Do NOT format hex dumps
         },
         fallback_formatter = {
             formatters.lsp,
