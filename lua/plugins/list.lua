@@ -129,4 +129,8 @@ return {
         "RaafatTurki/hex.nvim",
         config = require("plugins.conf.hex")
     },
+
+    {
+        "cshmookler/neovim_crypt",
+    },
 }
