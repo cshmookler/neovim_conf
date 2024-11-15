@@ -28,7 +28,7 @@ return function()
 
             nbufnoremap("f", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
-                if node.type == nil and node.name == ".." then
+                if node.name == ".." then
                     vim.cmd.tcd("..")
                 else
                     nvim_tree_api.node.open.edit()
