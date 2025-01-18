@@ -181,3 +181,8 @@ vim.g.doge_enable_mappings = 0;
 nnoremap("<Leader>d", "<Plug>(doge-generate)", "Doc gen")
 noremap({ "n", "i", "x" }, "<Tab>", "<Plug>(doge-comment-jump-forward)", "Doc next field")
 noremap({ "n", "i", "x" }, "<S-Tab>", "<Plug>(doge-comment-jump-backward)", "Doc previous field")
+
+-- Remove all UI elements except for the text itself.
+nnoremap("<Leader>F",
+    ":set noruler noshowmode noshowcmd laststatus=0 signcolumn=no nonumber norelativenumber nocursorline showtabline=0<CR>",
+    "Hide all UI elements")
