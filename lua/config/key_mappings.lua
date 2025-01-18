@@ -190,3 +190,27 @@ nnoremap("<Leader>F",
 -- Switch between light and dark mode.
 nnoremap("<Leader>L", ":set background=light<CR>", "Enable light mode")
 nnoremap("<Leader>D", ":set background=dark<CR>", "Enable dark mode")
+
+-- Additional encryption utilities
+local crypt = require("crypt")
+vim.api.nvim_create_user_command("ReEncrypt", function()
+    local file = crypt.get_buffer_path(0)
+    if file == nil then
+        return
+    end
+
+    local last_line = vim.api.nvim_buf_get_lines(0, -2, -1, true)
+    if last_line == nil then
+        return
+    end
+
+    local password = last_line[1]
+    if password:len() == 0 then
+        vim.notify(
+            "The last line must contain at least one character.  The last line is used as the password for encryption.",
+            vim.log.levels.ERROR)
+        return
+    end
+
+    crypt.encrypt(file, password)
+end, {})
