@@ -186,3 +186,7 @@ noremap({ "n", "i", "x" }, "<S-Tab>", "<Plug>(doge-comment-jump-backward)", "Doc
 nnoremap("<Leader>F",
     ":set noruler noshowmode noshowcmd laststatus=0 signcolumn=no nonumber norelativenumber nocursorline showtabline=0<CR>",
     "Hide all UI elements")
+
+-- Switch between light and dark mode.
+nnoremap("<Leader>L", ":set background=light<CR>", "Enable light mode")
+nnoremap("<Leader>D", ":set background=dark<CR>", "Enable dark mode")
