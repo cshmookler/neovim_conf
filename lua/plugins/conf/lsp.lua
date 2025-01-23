@@ -302,6 +302,9 @@ return function()
     lspconfig.csharp_ls.setup { -- csharp-ls
         capabilities = capabilities,
     }
+    lspconfig.openscad_lsp.setup { -- openscad-lsp
+        capabilities = capabilities,
+    }
 
     local lint = require("lint")
     lint.linters_by_ft = {
