@@ -305,6 +305,9 @@ return function()
     lspconfig.openscad_lsp.setup { -- openscad-lsp
         capabilities = capabilities,
     }
+    lspconfig.verible.setup { -- verible-bin
+        capabilities = capabilities,
+    }
 
     local lint = require("lint")
     lint.linters_by_ft = {

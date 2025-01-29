@@ -2,7 +2,7 @@
 
 The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos). Includes several features by default:
 
- - Programming language support (C, C++, C#, Rust, Python, Lua, Vim, HTML, CSS, JS, TS, Bash, JSON, YAML, LaTeX, OpenSCAD):
+ - Programming language support (C, C++, C#, Rust, Python, Lua, Vim, HTML, CSS, JS, TS, Bash, JSON, YAML, LaTeX, OpenSCAD, SystemVerilog):
     - Syntax highlighting
     - Intellisense
     - Code suggestions and completion
@@ -35,8 +35,8 @@ Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (opt
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black mypy flake8 usort texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience dotnet-sdk tinyxxd openscad-lsp
-yay -S vim-language-server csharp-ls
+sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black mypy flake8 usort texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience dotnet-sdk tinyxxd
+yay -S vim-language-server csharp-ls openscad-lsp verible-bin
 ```
 
 #### 2.&nbsp; Clone this project to the Neovim configuration directory.
