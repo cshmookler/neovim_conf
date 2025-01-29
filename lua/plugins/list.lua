@@ -48,6 +48,12 @@ return {
     },
 
     {
+        "famiu/feline.nvim",
+        dependencies = "nvim-tree/nvim-web-devicons",
+        config = require("plugins.conf.feline")
+    },
+
+    {
         "akinsho/bufferline.nvim",
         branch = "main",
         dependencies = "nvim-tree/nvim-web-devicons",
