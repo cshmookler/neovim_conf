@@ -25,8 +25,8 @@ return function()
             },
         },
         sett = {
-            text = utils.vary_color({ latte = colors.base }, colors.surface0),
-            bkg = utils.vary_color({ latte = colors.crust }, colors.surface0),
+            text = utils.vary_color({ mocha = colors.base }, colors.surface0),
+            bkg = utils.vary_color({ mocha = colors.crust }, colors.surface0),
             diffs = colors.mauve,
             extras = colors.overlay1,
             curr_file = colors.maroon,
@@ -68,8 +68,18 @@ return function()
         }
     })
 
-    local feline = require("feline")
-    feline.setup {
-        components = require("catppuccin.groups.integrations.feline").get(),
-    }
+    local restart_feline = function()
+        package.loaded["feline"] = nil
+        package.loaded["catppuccin.groups.integrations.feline"] = nil
+        require("feline").setup {
+            components = require("catppuccin.groups.integrations.feline").get(),
+        }
+    end
+
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "*",
+        callback = restart_feline,
+    })
+
+    restart_feline()
 end
