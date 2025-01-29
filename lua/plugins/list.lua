@@ -48,11 +48,6 @@ return {
     },
 
     {
-        "nvim-lualine/lualine.nvim",
-        config = require("plugins.conf.lualine"),
-    },
-
-    {
         "akinsho/bufferline.nvim",
         branch = "main",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -132,5 +127,17 @@ return {
 
     {
         "cshmookler/neovim_crypt",
+    },
+
+    {
+        -- This plugin installation was taken from:
+        -- https://github.com/iamcco/markdown-preview.nvim/issues/704#issuecomment-2480811133
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        build = "cd app && npm install && git restore .",
+        init = function()
+            vim.g.mkdp_filetypes = { "markdown" }
+        end,
+        ft = { "markdown" },
     },
 }
