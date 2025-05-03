@@ -56,6 +56,16 @@ return function()
                 nvim_tree_api.node.show_info_popup()
             end, bufnr, "Show info popup")
 
+            nbufnoremap("y", function()
+                local node = nvim_tree_api.tree.get_node_under_cursor()
+                vim.fn.setreg("+", node.name)
+            end, bufnr, "Copy name of file or directory")
+
+            nbufnoremap("Y", function()
+                local node = nvim_tree_api.tree.get_node_under_cursor()
+                vim.fn.setreg("+", node.absolute_path)
+            end, bufnr, "Copy absolute path to file or directory")
+
             nbufnoremap("r", function()
                 nvim_tree_api.marks.toggle()
                 nvim_tree_api.fs.copy.node()
