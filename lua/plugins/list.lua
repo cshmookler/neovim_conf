@@ -50,7 +50,7 @@ return {
     {
         "famiu/feline.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
-        config = require("plugins.conf.feline")
+        config = require("plugins.conf.feline"),
     },
 
     {
@@ -62,7 +62,7 @@ return {
 
     {
         "windwp/nvim-autopairs",
-        config = require("plugins.conf.autopairs")
+        config = require("plugins.conf.autopairs"),
     },
 
     {
@@ -128,7 +128,7 @@ return {
 
     {
         "RaafatTurki/hex.nvim",
-        config = require("plugins.conf.hex")
+        config = require("plugins.conf.hex"),
     },
 
     {
@@ -145,5 +145,10 @@ return {
             vim.g.mkdp_filetypes = { "markdown" }
         end,
         ft = { "markdown" },
+    },
+
+    {
+        "LunarVim/bigfile.nvim",
+        config = require("plugins.conf.bigfile")
     },
 }
