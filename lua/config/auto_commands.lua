@@ -2,6 +2,7 @@
 vim.api.nvim_create_autocmd("BufReadPre", {
     pattern = { '*.pass' },
     callback = function(ev)
+        vim.cmd("setlocal noundofile")
         vim.cmd("syntax match ConcealPasswords /_\\\".*\\\"$/ conceal")
         nnoremap(
             "yy",
