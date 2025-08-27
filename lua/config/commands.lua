@@ -1,24 +1,6 @@
 -- Additional encryption utilities
 local crypt = require("crypt")
 
-vim.api.nvim_create_user_command("PassDecrypt", function()
-    local file = crypt.get_buffer_path(0)
-    if file == nil then
-        return
-    end
-
-    local password = crypt.get_password()
-    if password == nil then
-        return
-    end
-
-    if not crypt.decrypt(file, password) then
-        return
-    end
-
-    vim.api.nvim_buf_set_lines(0, -1, -1, false, { password })
-end, {})
-
 vim.api.nvim_create_user_command("PassEncrypt", function()
     local file = crypt.get_buffer_path(0)
     if file == nil then
@@ -46,6 +28,24 @@ vim.api.nvim_create_user_command("PassEncrypt", function()
         vim.cmd("write")
         return
     end
+end, {})
+
+vim.api.nvim_create_user_command("PassDecrypt", function()
+    local file = crypt.get_buffer_path(0)
+    if file == nil then
+        return
+    end
+
+    local password = crypt.get_password()
+    if password == nil then
+        return
+    end
+
+    if not crypt.decrypt(file, password) then
+        return
+    end
+
+    vim.api.nvim_buf_set_lines(0, -1, -1, false, { password })
 end, {})
 
 -- Conceal passwords in password files
