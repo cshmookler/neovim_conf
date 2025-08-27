@@ -6,3 +6,6 @@ require("config.lazy")
 
 -- Set custom key mappings
 require("config.key_mappings")
+
+-- Set automatic commands
+require("config.auto_commands")

@@ -54,7 +54,7 @@ vim.opt.wildchar         = 14   -- Key for triggering command-line completion.
 vim.opt.wildmenu         = true -- Enhance command-line completion
 
 -- Miscellaneous
-vim.opt.scrolloff        = 5             -- Minimum number of lines to keep above and below the cursor.
+vim.opt.scrolloff        = 5             -- Minimum number of lines to keep above and below the cursor
 vim.opt.clipboard        = "unnamedplus" -- Use the system clipboard.
 vim.opt.undofile         = true          -- Persistent undo history.
 vim.opt.undolevels       = 1000          -- Saved undo levels.
@@ -62,4 +62,7 @@ vim.opt.updatetime       = 250           -- Milliseconds between swap file write
 vim.opt.timeoutlen       = 1000          -- Milliseconds to wait for mapped sequences to complete.
 vim.opt.mouse            = "a"           -- Mouse support.
 vim.opt.confirm          = true          -- File saving prompt.
+vim.opt.concealcursor    = "nc"          -- Conceal content on the same line as the cursor unless in visual or insert mode
+vim.opt.conceallevel     = 3             -- Completely conceal text that's supposed to be hidden.
+
 vim.cmd.syntax("off")                    -- Disable default syntax highlighting (use treesitter and LSP instead)
