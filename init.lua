@@ -8,4 +8,4 @@ require("config.lazy")
 require("config.key_mappings")
 
 -- Set automatic commands
-require("config.auto_commands")
+require("config.commands")
