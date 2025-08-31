@@ -1,4 +1,3 @@
--- Additional encryption utilities
 local crypt = require("crypt")
 
 vim.api.nvim_create_user_command("PassEncrypt", function()
@@ -46,6 +45,7 @@ vim.api.nvim_create_user_command("PassDecrypt", function()
     end
 
     vim.api.nvim_buf_set_lines(0, -1, -1, false, { password })
+    vim.cmd("write")
 end, {})
 
 -- Conceal passwords in password files
@@ -53,6 +53,8 @@ vim.api.nvim_create_autocmd("BufReadPre", {
     pattern = { '*.pass' },
     callback = function(ev)
         vim.cmd("setlocal noundofile")
+        vim.cmd("setlocal concealcursor=nc")
+        vim.cmd("setlocal conceallevel=3")
         vim.cmd("syntax match ConcealPasswords /_\\\".*\\\"$/ conceal")
         nnoremap(
             "yy",
