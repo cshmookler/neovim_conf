@@ -308,6 +308,9 @@ return function()
     lspconfig.verible.setup { -- verible-bin
         capabilities = capabilities,
     }
+    lspconfig.gopls.setup {
+        capabilities = capabilities,
+    }
 
     local lint = require("lint")
     lint.linters_by_ft = {
