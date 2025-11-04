@@ -1,3 +1,6 @@
+-- Load key map utilities
+require("utils.key_map")
+
 -- Set custom options
 require("config.options")
 

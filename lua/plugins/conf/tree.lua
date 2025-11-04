@@ -1,5 +1,4 @@
 return function()
-    require("util.key_map")
     local tree = require("nvim-tree")
     tree.setup({
         on_attach = function(bufnr) -- or "default"

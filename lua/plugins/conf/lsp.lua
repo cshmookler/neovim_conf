@@ -206,8 +206,6 @@ return function()
 
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    require("util.key_map")
-
     nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
     nnoremap("gn", vim.diagnostic.goto_prev, "Goto previous diagnostic")
     nnoremap("gB", vim.diagnostic.setloclist, "Goto diagnostic list")

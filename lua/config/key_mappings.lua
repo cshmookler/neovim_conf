@@ -1,5 +1,3 @@
-require("util.key_map")
-
 -- Move by visual lines instead of actual lines.
 nvnoremap("j", "gj", "Move down by visual line")
 nvnoremap("k", "gk", "Move up by one visual line")
