@@ -67,8 +67,6 @@ return function()
             end, bufnr, "Copy absolute path to file or directory")
 
             nbufnoremap("r", function()
-                nvim_tree_api.marks.toggle()
-                nvim_tree_api.fs.copy.node()
                 nvim_tree_api.fs.rename()
             end, bufnr, "Rename file or directory")
 
