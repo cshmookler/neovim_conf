@@ -64,8 +64,11 @@ utils.nnoremap("<Leader>q", function()
         vim.api.nvim_win_close(current_win, true)
     end
     if delete_buf then
-        local buftype = vim.api.nvim_get_option_value("buftype", { buf = current_buf })
-        vim.api.nvim_buf_delete(current_buf, { force = buftype == "terminal" })
+        local buf_valid = vim.api.nvim_buf_is_valid(current_buf)
+        if buf_valid then
+            local buftype = vim.api.nvim_get_option_value("buftype", { buf = current_buf })
+            vim.api.nvim_buf_delete(current_buf, { force = buftype == "terminal" })
+        end
     end
     if not close_win then
         vim.cmd("quit")
@@ -110,8 +113,11 @@ utils.nnoremap("<Leader>Q", function()
             vim.api.nvim_win_close(current_win, true)
         end
         if delete_buf then
-            local buftype = vim.api.nvim_get_option_value("buftype", { buf = current_buf })
-            vim.api.nvim_buf_delete(current_buf, { force = buftype == "terminal" })
+            local buf_valid = vim.api.nvim_buf_is_valid(current_buf)
+            if buf_valid then
+                local buftype = vim.api.nvim_get_option_value("buftype", { buf = current_buf })
+                vim.api.nvim_buf_delete(current_buf, { force = buftype == "terminal" })
+            end
         end
         if not close_win then
             vim.cmd("quit")
