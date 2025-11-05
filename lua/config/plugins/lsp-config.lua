@@ -45,42 +45,37 @@ return {
 
         local utils = require("config.utils")
 
-        utils.nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
-        utils.nnoremap("gn", vim.diagnostic.goto_prev, "Goto previous diagnostic")
-        utils.nnoremap("gB", vim.diagnostic.setloclist, "Goto diagnostic list")
-        utils.nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
-
         local lsp_autocmds_group = "custom_lsp_autocmds"
         vim.api.nvim_create_augroup(lsp_autocmds_group, {})
 
-        local on_attach = function(args)
-            local bufnr = args.buf
-
-            utils.nbufnoremap("gd", vim.lsp.buf.definition, bufnr, "Goto definition")
-            utils.nbufnoremap("gD", vim.lsp.buf.declaration, bufnr, "Goto declaration")
-            utils.nbufnoremap("gt", vim.lsp.buf.type_definition, bufnr, "Goto type defition")
-            utils.nbufnoremap("gI", vim.lsp.buf.implementation, bufnr, "Goto implementation")
-            utils.nbufnoremap("gr", vim.lsp.buf.references, bufnr, "Goto references")
-            utils.nbufnoremap("<Leader>r", vim.lsp.buf.rename, bufnr, "Rename")
-            utils.nbufnoremap("<Leader>c", ":CodeActionMenu<CR>", bufnr, "Code action") -- vim.lsp.buf.code_action
-            utils.nbufnoremap("Y", vim.lsp.buf.hover, bufnr, "Hover")
-            utils.nbufnoremap("<Leader>F", vim.lsp.buf.format, bufnr, "Format")
-        end
-
-        local on_detach = function(args)
-            local bufnr = args.buf
-
-            vim.api.nvim_clear_autocmds({
-                buffer = bufnr,
-                group = lsp_autocmds_group,
-            })
-        end
-
         vim.api.nvim_create_autocmd("LspAttach", {
-            callback = on_attach,
+            callback = function(args)
+                local bufnr = args.buf
+
+                utils.nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
+                utils.nnoremap("gn", vim.diagnostic.goto_prev, "Goto previous diagnostic")
+                utils.nnoremap("gB", vim.diagnostic.setloclist, "Goto diagnostic list")
+                utils.nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
+                utils.nbufnoremap("gd", ":split<CR>:lua vim.lsp.buf.definition()<CR>", bufnr, "Goto definition")
+                utils.nbufnoremap("gD", ":split<CR>:lua vim.lsp.buf.declaration()<CR>", bufnr, "Goto declaration")
+                utils.nbufnoremap("gt", ":split<CR>:lua vim.lsp.buf.type_definition()<CR>", bufnr, "Goto type defition")
+                utils.nbufnoremap("gI", ":split<CR>:lua vim.lsp.buf.implementation()<CR>", bufnr, "Goto implementation")
+                utils.nbufnoremap("gr", ":split<CR>:lua vim.lsp.buf.references()<CR>", bufnr, "Goto references")
+                utils.nbufnoremap("<Leader>r", vim.lsp.buf.rename, bufnr, "Rename")
+                utils.nbufnoremap("<Leader>c", ":CodeActionMenu<CR>", bufnr, "Code action") -- vim.lsp.buf.code_action
+                utils.nbufnoremap("Y", vim.lsp.buf.hover, bufnr, "Hover")
+                utils.nbufnoremap("<Leader>F", vim.lsp.buf.format, bufnr, "Format")
+            end,
         })
         vim.api.nvim_create_autocmd("LspDetach", {
-            callback = on_detach,
+            callback = function(args)
+                local bufnr = args.buf
+
+                vim.api.nvim_clear_autocmds({
+                    buffer = bufnr,
+                    group = lsp_autocmds_group,
+                })
+            end,
         })
 
         local lsp_enable = function(name, opts)
