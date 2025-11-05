@@ -1,4 +1,6 @@
-noremap = function(mode, lhs, rhs, desc)
+M = {}
+
+local noremap = function(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, {
         noremap = true,
         silent = true,
@@ -6,16 +8,18 @@ noremap = function(mode, lhs, rhs, desc)
         desc = desc,
     })
 end
+M.noremap = noremap
 
-noremap_prompt = function(mode, lhs, rhs, desc)
+local noremap_prompt = function(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, {
         noremap = true,
         nowait = true,
         desc = desc,
     })
 end
+M.noremap_prompt = noremap_prompt 
 
-bufnoremap = function(mode, lhs, rhs, bufnr, desc)
+local bufnoremap = function(mode, lhs, rhs, bufnr, desc)
     vim.keymap.set(mode, lhs, rhs, {
         noremap = true,
         silent = true,
@@ -24,43 +28,46 @@ bufnoremap = function(mode, lhs, rhs, bufnr, desc)
         desc = desc,
     })
 end
+M.bufnoremap = bufnoremap
 
-nbufnoremap = function(lhs, rhs, bufnr, desc)
+M.nbufnoremap = function(lhs, rhs, bufnr, desc)
     bufnoremap("n", lhs, rhs, bufnr, desc)
 end
 
-nnoremap = function(lhs, rhs, desc)
+M.nnoremap = function(lhs, rhs, desc)
     noremap("n", lhs, rhs, desc)
 end
 
-nnoremap_prompt = function(lhs, rhs, desc)
+M.nnoremap_prompt = function(lhs, rhs, desc)
     noremap_prompt("n", lhs, rhs, desc)
 end
 
-xnoremap_prompt = function(lhs, rhs, desc)
+M.xnoremap_prompt = function(lhs, rhs, desc)
     noremap_prompt("x", lhs, rhs, desc)
 end
 
-inoremap = function(lhs, rhs, desc)
+M.inoremap = function(lhs, rhs, desc)
     noremap("i", lhs, rhs, desc)
 end
 
-xnoremap = function(lhs, rhs, desc)
+M.xnoremap = function(lhs, rhs, desc)
     noremap("x", lhs, rhs, desc)
 end
 
-isnoremap = function(lhs, rhs, desc)
+M.isnoremap = function(lhs, rhs, desc)
     noremap({ "i", "s" }, lhs, rhs, desc)
 end
 
-nvnoremap = function(lhs, rhs, desc)
+M.nvnoremap = function(lhs, rhs, desc)
     noremap({ "n", "v" }, lhs, rhs, desc)
 end
 
-nxnoremap = function(lhs, rhs, desc)
+M.nxnoremap = function(lhs, rhs, desc)
     noremap({ "n", "x" }, lhs, rhs, desc)
 end
 
-tnoremap = function(lhs, rhs, desc)
+M.tnoremap = function(lhs, rhs, desc)
     noremap("t", lhs, rhs, desc)
 end
+
+return M

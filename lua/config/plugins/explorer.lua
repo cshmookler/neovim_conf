@@ -1,31 +1,38 @@
-return function()
-    local tree = require("nvim-tree")
-    tree.setup({
+return {
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+        "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
         on_attach = function(bufnr) -- or "default"
             local nvim_tree_api = require("nvim-tree.api")
             -- nvim_tree_api.config.mappings.default_on_attach(bufnr)
 
-            nbufnoremap("<C-h>", function()
+            local utils = require("config.utils")
+
+            utils.nbufnoremap("<C-h>", function()
                 nvim_tree_api.node.open.horizontal()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in horizontal split")
 
-            nbufnoremap("<C-l>", function()
+            utils.nbufnoremap("<C-l>", function()
                 nvim_tree_api.node.open.vertical()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in vertical split")
 
-            nbufnoremap("<C-s>", function()
+            utils.nbufnoremap("<C-s>", function()
                 vim.cmd.tabprevious()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Goto previous tab")
 
-            nbufnoremap("<C-f>", function()
+            utils.nbufnoremap("<C-f>", function()
                 vim.cmd.tabnext()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Goto next tab")
 
-            nbufnoremap("f", function()
+            utils.nbufnoremap("f", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 if node.name == ".." then
                     vim.cmd.tcd("..")
@@ -35,62 +42,62 @@ return function()
                 end
             end, bufnr, "Open file in pane")
 
-            nbufnoremap("v", function()
+            utils.nbufnoremap("v", function()
                 nvim_tree_api.node.open.tab()
                 nvim_tree_api.tree.focus()
             end, bufnr, "Open file in new tab")
 
-            nbufnoremap("F", function()
+            utils.nbufnoremap("F", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 if node.type == "directory" then
                     vim.cmd.tcd(node.absolute_path)
                 end
             end, bufnr, "Change root to node")
 
-            nbufnoremap("R", function()
+            utils.nbufnoremap("R", function()
                 nvim_tree_api.tree.reload()
             end, bufnr, "Reload tree")
 
-            nbufnoremap("i", function()
+            utils.nbufnoremap("i", function()
                 nvim_tree_api.node.show_info_popup()
             end, bufnr, "Show info popup")
 
-            nbufnoremap("y", function()
+            utils.nbufnoremap("y", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 vim.fn.setreg("+", node.name)
             end, bufnr, "Copy name of file or directory")
 
-            nbufnoremap("Y", function()
+            utils.nbufnoremap("Y", function()
                 local node = nvim_tree_api.tree.get_node_under_cursor()
                 vim.fn.setreg("+", node.absolute_path)
             end, bufnr, "Copy absolute path to file or directory")
 
-            nbufnoremap("r", function()
+            utils.nbufnoremap("r", function()
                 nvim_tree_api.fs.rename()
             end, bufnr, "Rename file or directory")
 
-            nbufnoremap("a", function()
+            utils.nbufnoremap("a", function()
                 nvim_tree_api.fs.create()
             end, bufnr, "Create new file or directory")
 
-            nbufnoremap("c", function()
+            utils.nbufnoremap("c", function()
                 nvim_tree_api.marks.toggle()
                 nvim_tree_api.fs.copy.node()
             end, bufnr, "Select a file or directory")
 
-            nbufnoremap("p", function()
+            utils.nbufnoremap("p", function()
                 nvim_tree_api.fs.paste()
                 nvim_tree_api.marks.clear()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Copy selected files or directories to another directory")
 
-            nbufnoremap("m", function()
+            utils.nbufnoremap("m", function()
                 nvim_tree_api.marks.bulk.move()
                 nvim_tree_api.marks.clear()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Move selected files or directories to another directory")
 
-            nbufnoremap("d", function()
+            utils.nbufnoremap("d", function()
                 if #nvim_tree_api.marks.list() == 0 then
                     nvim_tree_api.fs.trash()
                 else
@@ -100,7 +107,7 @@ return function()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Trash selected files or directories")
 
-            nbufnoremap("D", function()
+            utils.nbufnoremap("D", function()
                 if #nvim_tree_api.marks.list() == 0 then
                     nvim_tree_api.fs.remove()
                 else
@@ -110,7 +117,7 @@ return function()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Delete selected files or directories")
 
-            nbufnoremap("x", function()
+            utils.nbufnoremap("x", function()
                 nvim_tree_api.marks.clear()
                 nvim_tree_api.fs.clear_clipboard()
             end, bufnr, "Deselect all files and directories")
@@ -148,7 +155,7 @@ return function()
                     local ui = vim.api.nvim_list_uis()[1]
                     return {
                         relative = "editor",
-                        border = "single", -- none, single, double, rounded, solid, or shadow
+                        border = "none", -- none, single, double, rounded, solid, or shadow
                         width = math.floor(ui.width * 0.5),
                         height = math.floor(ui.height * 0.5),
                         row = math.floor(ui.height * 0.25),
@@ -375,5 +382,5 @@ return function()
                 watcher = false,
             },
         },
-    })
-end
+    },
+}

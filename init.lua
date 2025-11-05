@@ -1,14 +1,9 @@
--- Load key map utilities
-require("utils.key_map")
-
--- Set custom options
+-- Before loading plugins
 require("config.options")
 
--- Setup the plugin manager
+-- Load plugins
 require("config.lazy")
 
--- Set custom key mappings
-require("config.key_mappings")
-
--- Set automatic commands
+-- After loading plugins
+require("config.mappings")
 require("config.commands")

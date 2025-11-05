@@ -1,3 +1,6 @@
+-- Colorscheme
+vim.cmd("colorscheme lunaperche") -- default, retrobox, wildcharm, lunaperche
+
 -- Custom global variables
 vim.g._format_on_save    = true -- Format on save by default.
 
