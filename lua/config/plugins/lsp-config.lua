@@ -83,26 +83,22 @@ return {
             callback = on_detach,
         })
 
-        vim.lsp.config('html', { -- vscode-html-languageserver
-            capabilities = capabilities,
-        })
-        vim.lsp.config('jsonls', { -- vscode-json-languageserver
-            capabilities = capabilities,
-        })
-        vim.lsp.config('cssls', { -- vscode-css-languageserver
-            capabilities = capabilities,
-        })
-        vim.lsp.config('yamlls', { -- yaml-language-server
-            capabilities = capabilities,
-        })
-        vim.lsp.config('ts_ls', { -- typescript-language-server
-            capabilities = capabilities,
-        })
-        vim.lsp.config('clangd', { -- clang
-            capabilities = capabilities,
-        })
-        vim.lsp.config('lua_ls', { -- lua-language-server
-            capabilities = capabilities,
+        local lsp_enable = function(name, opts)
+            if opts == nil then
+                opts = {}
+            end
+            opts.capabilities = capabilities
+            vim.lsp.config(name, opts)
+            vim.lsp.enable(name)
+        end
+
+        lsp_enable('html')   -- vscode-html-languageserver
+        lsp_enable('jsonls') -- vscode-json-languageserver
+        lsp_enable('cssls')  -- vscode-css-languageserver
+        lsp_enable('yamlls') -- yaml-language-server
+        lsp_enable('ts_ls')  -- typescript-language-server
+        lsp_enable('clangd') -- clang
+        lsp_enable('lua_ls', {
             settings = {
                 Lua = {
                     completion = {
@@ -116,36 +112,21 @@ return {
                     },
                 },
             },
-        })
-        vim.lsp.config('vimls', { -- vim-language-server
-            capabilities = capabilities,
-        })
-        vim.lsp.config('jedi_language_server', { -- jedi-language-server
-            capabilities = capabilities,
-        })
-        vim.lsp.config('bashls', { -- bash-language-server
-            capabilities = capabilities,
-        })
-        vim.lsp.config('rust_analyzer', { -- rust_analyzer
-            capabilities = capabilities,
-        })
-        vim.lsp.config('texlab', { -- texlab
+        })                                 -- lua-language-server
+        lsp_enable('vimls')                -- vim-language-server
+        lsp_enable('jedi_language_server') -- jedi-language-server
+        lsp_enable('bashls')               -- bash-language-server
+        lsp_enable('rust_analyzer')        -- rust-analyzer
+        vim.lsp.config('texlab', {         -- texlab
             -- -- Using the capabilities given by nvim-cmp appears to break texlab.
             -- capabilities = capabilities,
             capabilities = vim.lsp.protocol.make_client_capabilities(),
         })
-        vim.lsp.config('csharp_ls', { -- csharp-ls
-            capabilities = capabilities,
-        })
-        vim.lsp.config('openscad_lsp', { -- openscad-lsp
-            capabilities = capabilities,
-        })
-        vim.lsp.config('verible', { -- verible-bin
-            capabilities = capabilities,
-        })
-        vim.lsp.config('gopls', {
-            capabilities = capabilities,
-        })
+        vim.lsp.enable('texlab')
+        lsp_enable('csharp_ls')    -- csharp-ls
+        lsp_enable('openscad_lsp') -- openscad-lsp
+        lsp_enable('verible')      -- verible-bin
+        lsp_enable('gopls')        -- gopls
 
         local lint = require("lint")
         lint.linters_by_ft = {
