@@ -34,7 +34,6 @@ vim.api.nvim_create_user_command("PassEncrypt", function()
     end
 
     vim.cmd("edit! " .. out)
-    vim.cmd("bdelete #")
 end, {})
 
 
@@ -76,7 +75,6 @@ vim.api.nvim_create_user_command("PassDecrypt", function()
     end
 
     vim.cmd("edit! " .. out)
-    vim.cmd("bdelete #")
     vim.api.nvim_buf_set_lines(0, -1, -1, false, { password })
     vim.cmd("silent write")
 end, {})
