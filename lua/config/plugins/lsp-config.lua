@@ -2,7 +2,8 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
         "hrsh7th/nvim-cmp",
-        "weilbith/nvim-code-action-menu",
+        "nvim-telescope/telescope.nvim",
+        "aznhe21/actions-preview.nvim",
         "elentok/format-on-save.nvim",
         "mfussenegger/nvim-lint",
     },
@@ -41,6 +42,8 @@ return {
             run_with_sh = false,
         })
 
+        local actions_preview = require("actions-preview")
+        actions_preview.setup()
         local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
         local utils = require("config.utils")
@@ -48,31 +51,30 @@ return {
         local lsp_autocmds_group = "custom_lsp_autocmds"
         vim.api.nvim_create_augroup(lsp_autocmds_group, {})
 
+        utils.nnoremap("gm", function() vim.diagnostic.jump({ count = 1, float = true }) end, "Goto next diagnostic")
+        utils.nnoremap("gn", function() vim.diagnostic.jump({ count = -1, float = true }) end, "Goto previous diagnostic")
+        utils.nnoremap("gB", vim.diagnostic.setloclist, "Goto diagnostic list")
+        utils.nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
+
         vim.api.nvim_create_autocmd("LspAttach", {
             callback = function(args)
-                local bufnr = args.buf
-
-                utils.nnoremap("gm", vim.diagnostic.goto_next, "Goto next diagnostic")
-                utils.nnoremap("gn", vim.diagnostic.goto_prev, "Goto previous diagnostic")
-                utils.nnoremap("gB", vim.diagnostic.setloclist, "Goto diagnostic list")
-                utils.nnoremap("gf", vim.diagnostic.open_float, "Open floating diagnostic message")
-                utils.nbufnoremap("gd", ":split<CR>:lua vim.lsp.buf.definition()<CR>", bufnr, "Goto definition")
-                utils.nbufnoremap("gD", ":split<CR>:lua vim.lsp.buf.declaration()<CR>", bufnr, "Goto declaration")
-                utils.nbufnoremap("gt", ":split<CR>:lua vim.lsp.buf.type_definition()<CR>", bufnr, "Goto type defition")
-                utils.nbufnoremap("gI", ":split<CR>:lua vim.lsp.buf.implementation()<CR>", bufnr, "Goto implementation")
-                utils.nbufnoremap("gr", ":split<CR>:lua vim.lsp.buf.references()<CR>", bufnr, "Goto references")
-                utils.nbufnoremap("<Leader>r", vim.lsp.buf.rename, bufnr, "Rename")
-                utils.nbufnoremap("<Leader>c", ":CodeActionMenu<CR>", bufnr, "Code action") -- vim.lsp.buf.code_action
-                utils.nbufnoremap("Y", vim.lsp.buf.hover, bufnr, "Hover")
-                utils.nbufnoremap("<Leader>F", vim.lsp.buf.format, bufnr, "Format")
+                utils.nbufnoremap("gd", ":split<CR>:lua vim.lsp.buf.definition()<CR>", args.buf, "Goto definition")
+                utils.nbufnoremap("gD", ":split<CR>:lua vim.lsp.buf.declaration()<CR>", args.buf, "Goto declaration")
+                utils.nbufnoremap("gt", ":split<CR>:lua vim.lsp.buf.type_definition()<CR>", args.buf,
+                    "Goto type defition")
+                utils.nbufnoremap("gI", ":split<CR>:lua vim.lsp.buf.implementation()<CR>", args.buf,
+                    "Goto implementation")
+                utils.nbufnoremap("gr", ":split<CR>:lua vim.lsp.buf.references()<CR>", args.buf, "Goto references")
+                utils.nbufnoremap("<Leader>r", vim.lsp.buf.rename, args.buf, "Rename")
+                utils.nbufnoremap("<Leader>c", actions_preview.code_actions, args.buf, "Code action")
+                utils.nbufnoremap("Y", vim.lsp.buf.hover, args.buf, "Hover")
+                utils.nbufnoremap("<Leader>F", vim.lsp.buf.format, args.buf, "Format")
             end,
         })
         vim.api.nvim_create_autocmd("LspDetach", {
             callback = function(args)
-                local bufnr = args.buf
-
                 vim.api.nvim_clear_autocmds({
-                    buffer = bufnr,
+                    buffer = args.buf,
                     group = lsp_autocmds_group,
                 })
             end,
@@ -133,9 +135,5 @@ return {
                 lint.try_lint()
             end,
         })
-
-        vim.g.code_action_menu_show_details = false
-        vim.g.code_action_menu_show_diff = true
-        vim.g.code_action_menu_show_action_kind = true
     end,
 }

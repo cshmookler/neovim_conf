@@ -15,7 +15,11 @@ return {
             ["<C-u>"] = cmp.mapping.scroll_docs(-4),
             ["<C-Space>"] = cmp.mapping(function(_)
                 if cmp.visible() then
-                    cmp.confirm({ select = true })
+                    if cmp.get_active_entry() == nil then
+                        cmp.close()
+                    else
+                        cmp.confirm()
+                    end
                 else
                     cmp.complete()
                 end

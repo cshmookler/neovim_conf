@@ -137,7 +137,9 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
                 local buf_valid = vim.api.nvim_buf_is_valid(buf)
                 if buf_valid then
                     local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
-                    vim.api.nvim_buf_delete(buf, { force = buftype == "terminal" })
+                    if buftype ~= "nofile" then
+                        vim.api.nvim_buf_delete(buf, { force = buftype == "terminal" })
+                    end
                 end
             end
         end

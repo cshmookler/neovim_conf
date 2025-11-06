@@ -16,7 +16,7 @@ return {
             group_index = 2,
             priority = 10, -- low
             keyword_length = 2,
-            max_item_count = 5,
+            max_item_count = 10,
         })
         cmp.setup(config)
     end,
