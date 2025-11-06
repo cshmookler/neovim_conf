@@ -23,19 +23,17 @@ The default Neovim configuration for [MOOS](https://github.com/cshmookler/moos).
  - Git integration:
     - Added/modified/removed lines indicated in the sign column
     - Status of files/directories shown in the file explorer
- - Browser integration:
-    - Preview files in a web browser with :Vivify
 
 ## Installation
 
 #### 1.&nbsp; Install required packages.
 
-Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), Formatters (optional), LaTeX, and the .NET SDK.
+Install Neovim 0.10.x, Treesitter CLI, Aspell, xsel (optional), LSP servers (optional), Formatters (optional), and LaTeX.
 
 ##### Linux (MOOS):
 
 ```bash
-sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black mypy flake8 usort texlab texlive-basic texlive-latex texlive-latexrecommended texlive-fontsrecommended texlive-mathscience dotnet-sdk tinyxxd
+sudo pacman -S neovim tree-sitter-cli aspell-en xsel vscode-html-languageserver vscode-json-languageserver vscode-css-languageserver typescript-language-server yaml-language-server clang lua-language-server jedi-language-server bash-language-server rust-analyzer python-black mypy flake8 usort texlab $(pacman -Sgq 'texlive') tinyxxd
 yay -S vim-language-server csharp-ls openscad-lsp verible-bin
 ```
 
@@ -48,7 +46,7 @@ git clone https://github.com/cshmookler/neovim_conf ~/.config/nvim
 #### 3.&nbsp; Generate the dictionary file.
 
 ```bash
-aspell dump master | aspell extract > ~/.local/share/nvim/dict
+aspell dump master > /etc/nvim/dict
 ```
 
 #### 4.&nbsp; Start Neovim.
@@ -66,11 +64,3 @@ Once all plugins are installed, press 'q' to exit the plugin installation window
 ```vim
 :checkhealth
 ```
-
-## TODO
-
-- [X] Fix washed out colors in the integrated terminal.
-- [X] Require packages for LaTeX.
-- [ ] Move by actual lines for code files.
-- [ ] Move by visual lines for text files and LaTeX.
-- [ ] Install all treesitter modules by default.
