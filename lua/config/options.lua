@@ -12,8 +12,8 @@ vim.g.maplocalleader     = " " -- Set local mapping for <Leader>.
 vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Disable modelines to prevent arbitrary code execution
-vim.o.modeline           = false;
+-- Enable modelines to adjust automatic formatting
+vim.o.modeline           = true;
 
 -- Indentation
 vim.opt.shiftwidth       = 4    -- Indentation width.
@@ -60,10 +60,10 @@ vim.opt.wildmenu         = true -- Enhance command-line completion
 vim.opt.scrolloff        = 5             -- Minimum number of lines to keep above and below the cursor
 vim.opt.clipboard        = "unnamedplus" -- Use the system clipboard.
 vim.opt.undofile         = true          -- Persistent undo history.
-vim.opt.undolevels       = 1000          -- Saved undo levels.
+vim.opt.undolevels       = 1000000       -- Saved undo levels.
 vim.opt.updatetime       = 250           -- Milliseconds between swap file writes when nothing is typed.
 vim.opt.timeoutlen       = 1000          -- Milliseconds to wait for mapped sequences to complete.
 vim.opt.mouse            = "a"           -- Mouse support.
 vim.opt.confirm          = true          -- File saving prompt.
 
-vim.cmd.syntax("off")                    -- Disable default syntax highlighting (use treesitter and LSP instead)
+vim.cmd.syntax("on")                     -- Enable default syntax highlighting (nvim-treesitter is archived and LSP highlighting is unreliable)

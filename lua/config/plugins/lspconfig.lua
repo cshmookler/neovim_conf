@@ -2,12 +2,15 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
         "hrsh7th/nvim-cmp",
-        "nvim-telescope/telescope.nvim",
         "aznhe21/actions-preview.nvim",
-        "elentok/format-on-save.nvim",
-        "mfussenegger/nvim-lint",
     },
     config = function()
+        local utils = require("config.utils")
+
+        local actions_preview = require("actions-preview")
+        actions_preview.setup()
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
         vim.diagnostic.config({
             underline = true,
             virtual_text = false,
@@ -22,31 +25,6 @@ return {
             update_in_insert = true,
             severity_sort = true,
         })
-
-        local format_on_save = require("format-on-save")
-        local formatters = require("format-on-save.formatters")
-        format_on_save.setup({
-            formatter_by_ft = {
-                python = {
-                    formatters.black,
-                    formatters.shell({
-                        cmd = { "usort", "format", "%" },
-                        tempfile = "random",
-                    }),
-                },
-                xxd = {}, -- Do NOT format hex dumps
-            },
-            fallback_formatter = {
-                formatters.lsp,
-            },
-            run_with_sh = false,
-        })
-
-        local actions_preview = require("actions-preview")
-        actions_preview.setup()
-        local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-        local utils = require("config.utils")
 
         local lsp_autocmds_group = "custom_lsp_autocmds"
         vim.api.nvim_create_augroup(lsp_autocmds_group, {})
@@ -124,16 +102,5 @@ return {
         lsp_enable('openscad_lsp') -- openscad-lsp
         lsp_enable('verible')      -- verible-bin
         lsp_enable('gopls')        -- gopls
-
-        local lint = require("lint")
-        lint.linters_by_ft = {
-            python = { "mypy", "flake8" }
-        }
-
-        vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-            callback = function()
-                lint.try_lint()
-            end,
-        })
     end,
 }
